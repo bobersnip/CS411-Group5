@@ -1,0 +1,6 @@
+Proposal 1:
+	The goal of this first project is to allow users to input a game/games into the webapp and then get further game recommendations, based on the music of games they inputted. First, we will make sure that the game they input is a real game, using a video game database. Then, we will find the soundtracks from their inputted games, and search for related soundtracks from other games. Then, with the new soundtracks, we will search for their respective games using a video game database. Users will be able to make an account so that they may store/like their favorite game recommendations.
+
+
+Proposal 2:
+	Users will be able to input the ingredients that they have, and will be able to get recipe that include those ingredients. These recipes can be displayed in various ways, such as “most ingredients to least” or “most well reviewed.” If the user doesn’t have some of the ingredients, we will use a grocery store api to retrieve the costs of the remaining ingredients. Users will be able to make an account in order to save/like their favorite recipes.
