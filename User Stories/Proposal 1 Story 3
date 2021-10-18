@@ -1,0 +1,10 @@
+As a user (not necessarily logged in) I want to be able to also search for a game or multiple games. If it is a legitimate game, 
+then I should be able to come up with a playlist with soundtracks that are similar to those from the game(s) that I initially searched for. 
+I should also be able to sort of “drill down” from the songs in my results. That is, I should be able to search for more songs using the previous songs 
+that came up as results.
+As a logged in user with Spotify, I want to be able to favorite songs that I find when searching. 
+I then want to be able to turn my favorite songs into a playlist on spotify, so that I can listen to them later. 
+I also want the app to be able to make a playlist that contains soundtracks from my favorite games. 
+These could be the same playlist, or two separate playlists. 
+I also want to be able to either add songs that I find on the webapp to one of my previously created playlists, or I would like to be provided with a link 
+to the song on spotify, so that I may be able to view/listen to the song on spotify.
