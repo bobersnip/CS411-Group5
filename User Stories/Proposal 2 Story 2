@@ -1,0 +1,19 @@
+As a logged in user, I want to find a dish that I can make with the ingredients that I have left over in my fridge in order to use my ingredients 
+efficiently and save money. I want to input the ingredients I have on this app and have the app give me a list of dishes that use as many ingredients as possible. 
+Logged in users should be able to click on the “Search for Recipes” button on the bottom of the screen, 
+where they will be redirected to a page that displays a list of recipes that use the ingredients that the logged in users have saved on their account. 
+The list should automatically be sorted from using as many ingredients as possible to at least 1 ingredient used. The list should display the dish name, 
+picture, how many ingredients in the dish the user doesn’t have , and rating. (The number of ingredients the user doesn’t have should be marked in red or a 
+text that is distinct to show more importance) The logged in user can then click on a recipe in the list to go to the recipe page, 
+where they can see all the details of the recipe that they clicked on. 
+There will also be a “I made this” button on the recipe page that will then redirect the logged in user to an evaluation page. 
+If the dish was never in the user’s “tried recipes history”, the evaluation page will ask the user to rate the dish from 1-5 stars. 
+The evaluation page will also ask which ingredients the user used completely and could be removed from their profile. 
+The ingredients that are in the recipe will be listed first and then any additional ingredients that the user had that they could have 
+added will be listed underneath in a “additional ingredients used” drop down menu. The app should then save the update list of ingredients the user has, 
+and add the recipe to the user’s history.
+
+Additional add on features: Users can add notes on the recipes that they looked at so the recipes can be personalized. 
+
+Sub-story:
+The user should be able to save the ingredients they have into their account (whether they have it or not not how much) so they don’t have to enter the ingredients every time they log in to make a dish. The app should ask the user after finishing the dish if they still have the ingredients they used or not. So let’s say the user has milk and cereal and I input that into the app, the app should add these two ingredients into my account. After the user makes cereal the app should ask the user if they still have milk and cereal and the user should answer yes/no based on whether they think they have enough of those ingredients.
