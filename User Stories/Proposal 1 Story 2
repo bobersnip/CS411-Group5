@@ -1,0 +1,14 @@
+As a User (who is not necessarily logged in) I should be able to search for either a game or a soundtrack that I like or want to see. 
+If I see a game that I know I like, or a game that interests me, I should be able to use that game to find other games that I may like, 
+based on the soundtracks of the games. The webapp should then show me these games and (if I am logged in [see login story]) 
+allow me to add them to a list of saved games. There should be a similar process for a soundtrack that I like. If I searched for a soundtrack that I like, 
+I should be able to use that soundtrack to find games with similar soundtracks. As above, the webapp should show me the games with said soundtracks and 
+I should be able to add them to my list of favorite games if I am already logged in.
+	As a user I want to be able to log in to my Spotify account (see the login story) and the app will have an option that asks if I want to search my playlists 
+  for any video game soundtracks. If I have any soundtracks from games, it should create a list of those games which can be saved to my account. 
+  Then, the app should recommend to me a list of games based on how similar these soundtracks are. 
+	 As a logged in user (see the login user story) I want to be able to dislike or hide games that I don’t like so that when I request a recommendation list, 
+   I don’t see games that I don’t like. I also want to reset my list of saved games in case I don’t like my recommended games. 
+   The app shouldn’t recommend a game that I disliked or hidden. When I am recommended games I should also not be recommended a game that I have already 
+   added to my list of saved games. I should also be able to leave a ‘rating’ on games that I have played with a five-star rating system.
+   I should also be able to rate the soundtrack separately from the game itself, using the same rating system.
