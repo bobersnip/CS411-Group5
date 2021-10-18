@@ -1,0 +1,37 @@
+creating an account:
+When creating a new account, the user will be able to sign up either with email+password or Google.
+If they choose email+password, they must enter an email address in a legitimate format (___@___.___) 
+where the first blank only consists of letters and numbers and the second two blanks only consist of letters. 
+If the email address is in an invalid format, the user will receive a warning message and be unable to proceed. 
+If the email is already associated with an account, they will be unable to proceed, and will be prompted to use a different email address. 
+Then, the user must enter a password that follows this set of criteria:
+at least 8 characters long
+contains at least one uppercase letter
+contains at least one number
+contains at least one special character (-, @, _, +, =, etc.)
+They will have to enter the password again, and it must match the first password entered, following all the criteria set.
+If the user forgets their password or wishes to reset their password, they’ll be prompted to enter the email address associated with their account, 
+where they’ll be sent a link that allows them to change their password. When they click on the link, 
+it opens a tab to a page which will prompt them to enter a new password, following the same criteria from the above point. 
+The link will expire in one hour if they do not click on it, and their password will not be changed. 
+If the user chooses to create an account through a major service (currently Google), 
+it will take them to the typical authentication page (informs them that an app is trying to access their information + what the information being shared is), 
+where they will be prompted to either continue and link their account or cancel account creation. 
+Regardless, the user is given a randomly generated unique user ID (similar to how Spotify does it) and can use this to share their account with others.
+Login story:
+	Upon entering the app, the user will be prompted with an opportunity to login, or continue as a guest. The user should be able to navigate the app as normal if 
+  they are a guest (see the primary user story for more details). However, if a user is logged in as a guest, they will not have access to the recipe-favoriting 
+  feature, nor will they be able to follow anyone that they search for; though they will still be able to search for other users and view their profiles. 
+  We will support a login through Google, since it is one of the most widely used platforms. 
+  If a user does not have any of the above accounts, or does not want to login through them, 
+  they can choose to register for an account using a valid email (see account information story). 
+  At any point during navigation of the app, there should be a login button at the header of the page, 
+  so that a guest user may be able to log in whenever they decide to. On any of the given login pages, 
+  if the user logs in with their email/username and a password, there should be a checkbox that will allow the website to “remember me”, 
+  so that they will not have to go through the login process again, after they close their browser or something similar. After logging in, 
+  the user should be brought back to the same page that they were on before logging in. Similar to this, there should be a logout button at the header of the page, 
+  if the user is already logged in. Once again, the user should be brought back to the page that they were at before logging out. 
+  If a user attempts to login with the same username/email 8 times, then they should be locked out of the account for 30 minutes. 
+  That is, they should not be able to login with that username/email for the duration of the lockout. 
+  During this time, the user may choose to reset their password instead of waiting for their lockout duration to expire 
+  (see the account information story for more info on resetting a password). For more information on what a logged in user can do, see the primary user story.
