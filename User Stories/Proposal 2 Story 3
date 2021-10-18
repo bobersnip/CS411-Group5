@@ -1,0 +1,9 @@
+The ingredients that are used in the recipe should be displayed near the top of the recipe page. 
+The ingredients that the user already has should be listed first and then the ingredients that the user doesn’t have should be listed separately. 
+The app should mark the ingredients the user has in black, and the ones they don’t have in red. 
+The missing ingredients are clickable so they can see their price and be able to add all missing ingredients into a groceries list.
+Sub-story:
+On their profile page, the user should have a groceries list for items that they do not have in their pantry list. 
+The user should be able add groceries to that list from the profile page and also add them from recipe pages (mentioned above). 
+The user should also be able to delete items or mark them as bought. If the items in the groceries list are marked as bought, 
+the items will be deleted from the groceries list and added to the pantry list on refresh. 
