@@ -29,7 +29,7 @@ def recipesSearch(ingredient):
     url = "https://api.edamam.com/api/recipes/v2?type=public&q=" + search_item +"&app_id=" + app_id +"&app_key=" + app_key + "&ingr=" + max_num_ingredients
     response = requests.request("GET", url)
     dictionary = json.loads(response.text)
-    #recipies = dictionary["hits"][0]["recipe"]["label"]
+    #recipes = dictionary["hits"][0]["recipe"]["label"]
     #image = dictionary["hits"][0]["recipe"]["image"]
     
 
@@ -38,18 +38,18 @@ def recipesSearch(ingredient):
     price = ""
     #print(len(dictionary["hits"]))
     for x in dictionary["hits"]:
-        recipies = x["recipe"]["label"]
+        recipes = x["recipe"]["label"]
         image = x["recipe"]["image"]
         for y in x["recipe"]["ingredients"]:
             url3 = "https://api.kroger.com/v1/products?filter.term=" + y["food"]
             
             ingr += "- " + y["text"] + " " + "<br>"
         
-        view += "<body> <p>" + recipies + "</p><body> <p>" + ingr + "</p><img src="+ image +" alt='not found'></body> "
-    #print(recipies)
+        view += "<body> <p>" + recipes + "</p><body> <p>" + ingr + "</p><img src="+ image +" alt='not found'></body> "
+    #print(recipes)
     
 
     
-    #view = "<body> <p>" + recipies + "</p>  <img src="+ image +" alt='not found'> </body> "
+    #view = "<body> <p>" + recipes + "</p>  <img src="+ image +" alt='not found'> </body> "
     return view
 
