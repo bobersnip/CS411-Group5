@@ -1,0 +1,42 @@
+<!-- author ben lawson (balawson@bu.edu) -->
+<!doctype html>
+{% if message %}
+  <h4>{{message}}!</h4>
+{% endif %}
+<title>Photoshare</title>
+{% if name %}
+  <h1>Hello {{ name }}!</h1>
+{% endif %}
+
+{% if message is none %}
+  <p>You should <a href='/login'>login!</a></p>
+{% else %}
+  <p> Go to <a href='/profile'>profile?</a></p>
+<ul>
+    <li><a href='/api_req'>Make an api request</a> </li>
+
+</ul>
+{% endif %}
+
+{% if photos %}
+<h2>Here are your photos</h2>
+    <ul>
+    {% for photo in photos %}
+
+        <li>{{photo[2]}}<br>
+
+        <img src="data:image/jpg;base64, {{ photo[0] }}"/></li>
+    {% endfor %}
+    </ul>
+{% endif %}
+
+{% if top_users %}
+<h2>These are our top users:</h2>
+    {% for top_user in top_users %}
+        <li>{{top_user[1]}} {{top_user[2]}}<br>
+    {% endfor %}
+{% endif %}
+
+<ul>
+<li><a href='/'>Home</a></li>
+</ul>

@@ -1,0 +1,19 @@
+<head>
+    <title>Query the API!</title>
+</head>
+<!-- {%if supress == "False"%}
+<h1> Email already in use! Use another one or <a href="/login">login</a></h1>
+{% endif %} -->
+    <body>
+        <div class="title">
+            <h1>Enter your information below</h1>
+        </div>
+        <div id="content">
+            <form method="post" action="{{ url_for('make_req') }}">
+                <label for="ingredients">Enter ingredients to filter by (separated by commas):</label>
+                <input type="ingredients" name="ingredients" required="required"/><br />
+                <input type="submit" />
+            </form>
+         </div>
+    </body>
+<a href='/'>Home</a>

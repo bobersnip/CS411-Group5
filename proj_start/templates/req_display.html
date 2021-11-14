@@ -1,0 +1,23 @@
+<head>
+    <title>Here are your friends:</title>
+</head>
+    <body>
+        <div class="title">
+            <h1>Here is the API Query</h1>
+        </div>
+        {% if message %}
+          <h4>{{message}}</h4>
+        {% endif %}
+        <div id="content">
+            {% if recipe_name %}
+                {% for i in index %}
+                    <h3>Here is the first recipe: {{recipe_name[i]}}</h3>
+                    <img src="{{recipe_image[i]}}"/><br>
+                    {% for ingredients in recipe_ingredients[i] %}
+                        <li>{{ingredients}} <br></li>
+                    {% endfor %}
+                {% endfor %}
+            {% endif %}
+        </div>
+    </body>
+<a href='/'>Home</a>

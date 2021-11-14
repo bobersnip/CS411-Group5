@@ -1,0 +1,40 @@
+<head>
+    <title>Here are your friends:</title>
+</head>
+    <body>
+        <div class="title">
+            <h1>Here are your friends:</h1>
+        </div>
+        {% if message %}
+          <h4>{{message}}</h4>
+        {% endif %}
+        <div id="content">
+            <form method="post" action="{{ url_for('find_friend') }}">
+                <label for="friend_email">Search for a friend (by email):</label>
+                <input type="friend_email" name="friend_email" /><br />
+                <input type="submit" />
+            </form>
+        </div>
+
+        <div id="content">
+            <form method="post" action="{{ url_for('friend_rec') }}">
+                <input type="submit" value="see recommendations"/>
+            </form>
+         </div>
+        {% if recs %}
+            <div id="content">
+                <h4>Here are your recommended friends:</h4>
+                {% for rec in recs %}
+                    <li>{{rec[0]}} ({{rec[1]}})<br>
+                {% endfor %}
+            </div>
+        {% endif %}
+        <div id="content">
+            <ul>
+            {% for friend in friend_query %}
+                <li>{{friend}}<br>
+            {% endfor %}
+            </ul>
+        </div>
+    </body>
+<a href='/'>Home</a>
