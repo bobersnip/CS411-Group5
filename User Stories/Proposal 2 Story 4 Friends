@@ -1,0 +1,6 @@
+As a logged in user I should be able to search for other users and follow them. When I search for another user, I should be able to view their profile, 
+which would contain things such as the recipes they like, maybe their favorite ingredients(?), as well as other miscellaneous information, 
+such as their name/username and perhaps a self-written bio. I should also be able to view a list of the people I follow, 
+as well as the people that are following me. I also want to be able to share any dishes that I find tasty or interesting with my friends. 
+Also, if i can share an image of a dish that i made so that people that follow me can see those photos and potentially like and comment on them 
+and see the original recipe used in the image.

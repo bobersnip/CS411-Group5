@@ -1,0 +1,11 @@
+	The app should save all my games either locally or in an online account so that when I want a new recommendation, 
+  I can just add the last game I played and get my results back without having to add all games again. 
+  I also want the option to search for a recommendation based on a single game (or multiple games) I input without taking into consideration other games 
+  I already saved in my account. This should be data that is already stored in my account, so that I won't have to keep ensuring that it 
+  isn’t recommending games that I already know about.
+	As a logged in user I should be able to search for other users’ accounts and follow them. When I search for another user, 
+  I should be able to view their profile, which would contain things such as the games they like, their favorite soundtracks, 
+  as well as other miscellaneous information, such as their name/username and perhaps a self-written bio. 
+  I should also be able to view a list of the people I follow, as well as the people that are following me. 
+  I want to be able to see a recommendation list based on the games that me and my friends played. 
+  This could be interesting in deciding on a game that we all might be interested in.

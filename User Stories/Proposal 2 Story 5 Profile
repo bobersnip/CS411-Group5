@@ -1,0 +1,6 @@
+The users should have a groceries list, a pantry list, a tried recipes history, and a page to their profile information. 
+The groceries list and pantry list could be accessed from the profile page and edited from the profile page. 
+They should be able to delete and add ingredients in both lists. 
+The tried recipes history page is a list of all the recipes the user has marked as tried before. 
+They can change their rating for these recipes in this list. 
+The user’s profile page should show their user information and a clickable list of their friends (which would lead them to their friends’ profile pages).
