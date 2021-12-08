@@ -6,6 +6,7 @@
 # CodeHandBook at http://codehandbook.org/python-web-application-development-using-flask-and-mysql/
 # and MaxCountryMan at https://github.com/maxcountryman/flask-login/
 # and Flask Offical Tutorial at  http://flask.pocoo.org/docs/0.10/patterns/fileuploads/
+# and Authlib Documentation at https://docs.authlib.org/en/latest/index.html
 # see links for further understanding
 ###################################################
 
@@ -16,6 +17,7 @@ import flask_login
 import requests
 import json
 
+
 # for image uploading
 import os
 import base64
@@ -24,9 +26,13 @@ mysql = MySQL()
 app = Flask(__name__)
 app.secret_key = 'ayyylmao'  # Change this!
 
+# initializing OAuth
+from authlib.integrations.flask_client import OAuth
+oauth = OAuth(app)
+
 # These will need to be changed according to your creditionals
-app.config['MYSQL_DATABASE_USER'] = 'root'
-app.config['MYSQL_DATABASE_PASSWORD'] = 'YOUR MYSQL PASSWORD HERE'
+app.config['MYSQL_DATABASE_USER'] = 'Julia'
+app.config['MYSQL_DATABASE_PASSWORD'] = 'PASSWORD'
 app.config['MYSQL_DATABASE_DB'] = 'photoshare'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 mysql.init_app(app)
@@ -195,7 +201,6 @@ def req_display():
 @ app.route("/", methods=['GET'])
 def hello():
     return render_template('hello.html', message='Welcome to the Economic Recipe Finder!')
-
 
 if __name__ == "__main__":
     # this is invoked when in the shell  you run

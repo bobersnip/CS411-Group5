@@ -4,4 +4,4 @@ flask-mysql
 Flask-SQLAlchemy
 requests
 Werkzeug
-
+Authlib
