@@ -31,7 +31,7 @@ from authlib.integrations.flask_client import OAuth
 oauth = OAuth(app)
 
 # These will need to be changed according to your creditionals
-app.config['MYSQL_DATABASE_USER'] = 'Julia'
+app.config['MYSQL_DATABASE_USER'] = 'USERNAME'
 app.config['MYSQL_DATABASE_PASSWORD'] = 'PASSWORD'
 app.config['MYSQL_DATABASE_DB'] = 'photoshare'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
