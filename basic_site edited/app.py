@@ -16,6 +16,15 @@ from flaskext.mysql import MySQL
 import flask_login
 import requests
 import json
+import sqlite3
+
+# setting up OAuth
+from oauthlib.oauth2 import WebApplicationClient
+
+# Google config
+GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID", None)
+GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET", None)
+GOOGLE_DISCOVERY_URL = ("https://accounts.google.com/.well-known/openid-configuration")
 
 
 # for image uploading
@@ -26,12 +35,10 @@ mysql = MySQL()
 app = Flask(__name__)
 app.secret_key = 'ayyylmao'  # Change this!
 
-# initializing OAuth
-from authlib.integrations.flask_client import OAuth
-oauth = OAuth(app)
+
 
 # These will need to be changed according to your creditionals
-app.config['MYSQL_DATABASE_USER'] = 'USERNAME'
+app.config['MYSQL_DATABASE_USER'] = 'USER'
 app.config['MYSQL_DATABASE_PASSWORD'] = 'PASSWORD'
 app.config['MYSQL_DATABASE_DB'] = 'photoshare'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'

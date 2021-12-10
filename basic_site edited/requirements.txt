@@ -5,3 +5,5 @@ Flask-SQLAlchemy
 requests
 Werkzeug
 Authlib
+oauthlib
+pyOpenSSL
