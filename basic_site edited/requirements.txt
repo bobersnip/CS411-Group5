@@ -2,6 +2,7 @@ Flask
 Flask-Login
 flask-mysql
 Flask-SQLAlchemy
+SQLAlchemy
 requests
 Werkzeug
 Authlib

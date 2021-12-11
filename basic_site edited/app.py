@@ -10,32 +10,51 @@
 # see links for further understanding
 ###################################################
 
+from authlib.integrations.flask_client import OAuth
 import flask
 from flask import Flask, Response, request, render_template, redirect, url_for
 from flaskext.mysql import MySQL
+from sqlalchemy import desc, func, ForeignKey
+from sqlalchemy.sql.functions import user
+from flask_sqlalchemy import SQLAlchemy
 import flask_login
 import requests
 import json
 import sqlite3
 
-
 # for image uploading
 import os
-import base64
 
-
-mysql = MySQL()
 app = Flask(__name__)
+
+# check for the database file
+if os.path.exists('../database/recipe_app.db'):
+    pass
+else:
+    open("../database/recipe_app.db", "x")
+
+# These will need to be changed according to your creditionals
+username = "cs411"
+password = "bestclassever"
+server = "127.0.0.1"
+
+app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+mysqlconnector://{}:{}@{}/cs411".format(
+    username, password, server)
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.secret_key = 'ayyylmao'  # Change this!
 
+db = SQLAlchemy(app)
+
+
 # setting up OAuth
-from authlib.integrations.flask_client import OAuth
 oauth = OAuth(app)
 
 # Google config
 GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID", None)
 GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET", None)
-GOOGLE_DISCOVERY_URL = ("https://accounts.google.com/.well-known/openid-configuration")
+GOOGLE_DISCOVERY_URL = (
+    "https://accounts.google.com/.well-known/openid-configuration")
 google = oauth.register(
     name='google',
     client_id=GOOGLE_CLIENT_ID,
@@ -46,29 +65,36 @@ google = oauth.register(
     authorize_params=None,
     api_base_url='https://www.googleapis.com/oauth2/v1/',
     client_kwargs={'scope': 'openid profile email'},
-)   
+)
 
-# These will need to be changed according to your creditionals
-app.config['MYSQL_DATABASE_USER'] = 'USERNAME'
-app.config['MYSQL_DATABASE_PASSWORD'] = 'PASSWORD'
-app.config['MYSQL_DATABASE_DB'] = 'photoshare'
-app.config['MYSQL_DATABASE_HOST'] = 'localhost'
-mysql.init_app(app)
+
+# Classes declared to generate the database's Schema
+class Users(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(100), unique=True)
+    password = db.Column(db.String(100))
+
+
+class Friends(db.Model):
+    user_id1 = db.Column(db.Integer, ForeignKey(
+        'users.id'), onupdate="CASCADE", primary_key=True)
+    user_id2 = db.Column(db.Integer, ForeignKey(
+        'users.id'), onupdate="CASCADE", primary_key=True)
+
+
+db.create_all()
 
 # begin code used for login
 login_manager = flask_login.LoginManager()
 login_manager.init_app(app)
 
-conn = mysql.connect()
-cursor = conn.cursor()
-cursor.execute("SELECT email from Users")
-users = cursor.fetchall()
-
 
 def getUserList():
-    cursor = conn.cursor()
-    cursor.execute("SELECT email from Users")
-    return cursor.fetchall()
+    users_unfiltered = Users.query.all()
+    users = []
+    for x in users_unfiltered:
+        users.append(x.email)
+    return users
 
 
 class User(flask_login.UserMixin):
@@ -93,13 +119,18 @@ def request_loader(request):
         return
     user = User()
     user.id = email
-    cursor = mysql.connect().cursor()
-    cursor.execute(
-        "SELECT password FROM Users WHERE email = '{0}'".format(email))
-    data = cursor.fetchall()
-    pwd = str(data[0][0])
-    user.is_authenticated = request.form['password'] == pwd
-    return user
+    # cursor = mysql.connect().cursor()
+    # cursor.execute(
+    #     "SELECT password FROM Users WHERE email = '{0}'".format(email))
+    # data = cursor.fetchall()
+    data = db.session.query(
+        "password FROM Users WHERE email = '{0}'".format(email))
+    if data != None:
+        pwd = str(data[0][0])
+        user.is_authenticated = request.form['password'] == pwd
+        return user
+    else:
+        return
 
 
 '''
@@ -108,6 +139,7 @@ A new page looks like this:
 def new_page_function():
 	return new_page_html
 '''
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -122,27 +154,31 @@ def login():
 			   '''
     # The request method is POST (page is recieving data)
     email = flask.request.form['email']
-    cursor = conn.cursor()
+
     # check if email is registered
-    if cursor.execute("SELECT password FROM Users WHERE email = '{0}'".format(email)):
-        data = cursor.fetchall()
-        pwd = str(data[0][0])
+    data = db.session.query(
+        "password FROM Users WHERE email = '{0}'".format(email)).first()
+    print(data)
+    if data != None:
+        pwd = str(data[0])
         if flask.request.form['password'] == pwd:
             user = User()
             user.id = email
             flask_login.login_user(user)  # okay login in user
             # protected is a function defined in this file
-            return flask.redirect(flask.url_for('protected'))
+            return redirect(url_for('login'))
 
     # information did not match
     return "<a href='/login'>Try again</a>\
 			</br><a href='/register'>or make an account</a>"
 
+
 @app.route('/login/oauth', methods=['GET', 'POST'])
 def loginOAuth():
     google = oauth.create_client('google')
-    redirect_uri = url_for('authorize', _external = True)
+    redirect_uri = url_for('authorize', _external=True)
     return google.authorize_redirect(redirect_uri)
+
 
 @app.route('/authorize')
 def authorize():
@@ -153,13 +189,22 @@ def authorize():
     # do something with the token and profile
     return redirect('/')
 
+
 @app.route('/profile')
 def profile():
-    pass
+    curr_user = flask_login.current_user
+    user_email = curr_user.get_id()
+    # TODO UPDATE THIS WITH FRIEND INFO?
+    # TODO UPDATE THIS WITH FAVORITED RECIPES
+    # TODO UPDATE THIS WITH CURRENT INGREDIENTS THE USER HAS
+
+    return render_template('profile.html', name=user_email)
+
 
 @app.route('/login/callback')
 def callback():
     pass
+
 
 @app.route('/logout')
 def logout():
@@ -239,7 +284,12 @@ def req_display():
 # home page
 @ app.route("/", methods=['GET'])
 def hello():
-    return render_template('hello.html', message='Welcome to the Economic Recipe Finder!')
+    curr_user = flask_login.current_user
+    if curr_user.is_authenticated == True:
+        return render_template('hello.html', message='Welcome to the Economic Recipe Finder!')
+    else:
+        return render_template('hello.html')
+
 
 if __name__ == "__main__":
     # this is invoked when in the shell  you run

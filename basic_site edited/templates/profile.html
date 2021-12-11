@@ -1,14 +1,10 @@
-<!-- Home page / index page -->
+<!-- author ben lawson (balawson@bu.edu) -->
 <!doctype html>
-{% if message %}
-  <h4>{{message}}!</h4>
-{% endif %}
-<title>Economic Recipe Finder</title>
+<title>Profile</title>
 {% if name %}
   <h1>Hello {{ name }}!</h1>
 {% endif %}
-
-{% if not message %}
+{% if message is none %}
   <p>You should <a href='/login'>login!</a></p>
 {% else %}
   <p> Go to <a href='/profile'>profile?</a></p>
@@ -18,7 +14,6 @@
 </ul>
 {% endif %}
 
-<!-- Maybe we can utilize this html to display our ingredients or recipes -->
 {% if photos %}
 <h2>Here are your photos</h2>
     <ul>
@@ -29,6 +24,13 @@
         <img src="data:image/jpg;base64, {{ photo[0] }}"/></li>
     {% endfor %}
     </ul>
+{% endif %}
+
+{% if top_users %}
+<h2>These are our top users:</h2>
+    {% for top_user in top_users %}
+        <li>{{top_user[1]}} {{top_user[2]}}<br>
+    {% endfor %}
 {% endif %}
 
 <ul>
