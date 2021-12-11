@@ -25,6 +25,7 @@ import sqlite3
 # for image uploading
 import os
 
+
 app = Flask(__name__)
 
 # check for the database file
@@ -74,6 +75,8 @@ class Users(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(100))
+    first_name = db.Column(db.String(30))
+    last_name = db.Column(db.String(30))
 
 
 class Friends(db.Model):
@@ -142,19 +145,53 @@ def new_page_function():
 '''
 
 
+def email_is_registered(email):
+    data = db.session.query(
+        "email  FROM Users WHERE email = '{0}'".format(email)).first()
+    if data == None:
+        return False
+    else:
+        return True
+
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if flask.request.method == 'GET':
+        return render_template('register.html')
+
+    # if the method is POST, the user is trying to send registration info
+    try:
+        first_name = request.form.get('first_name')
+        last_name = request.form.get('last_name')
+        email = request.form.get('email')
+        # TODO I THINK WE ARE SUPPOSED TO HASH THE PASSWORD BEFORE STORING IT
+        password = request.form.get('password')
+    except:
+        # this prints to shell, end users will not see this (all print statements go to shell)
+        print("couldn't find all tokens")
+        return redirect(url_for('register'))
+    # test if the user's email is already registered
+    if (not email_is_registered(email)):
+        # add user to the db
+        new_user = Users(first_name=first_name,
+                         last_name=last_name, email=email, password=password)
+        db.session.add(new_user)
+        db.session.commit()
+
+        # for flask login
+        user = User()
+        user.id = email
+        flask_login.login_user(user)
+        return render_template('hello.html', name=email, message='Account Created!')
+
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    # if the method is GET, the user is trying to get to the login page
     if flask.request.method == 'GET':
-        return '''
-			   <form action='login' method='POST'>
-				<input type='text' name='email' id='email' placeholder='email'></input>
-				<input type='password' name='password' id='password' placeholder='password'></input>
-				<input type='submit' name='submit'></input>
-			   </form></br>
-               or sign in using <a href='/login/oauth'>Google</a>! <br><br>
-		   <a href='/'>Home</a>
-			   '''
-    # The request method is POST (page is recieving data)
+        return render_template('login.html')
+
+    # if the request method is POST, the user is sending login data
     email = flask.request.form['email']
 
     # check if email is registered
