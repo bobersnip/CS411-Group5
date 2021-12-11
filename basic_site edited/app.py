@@ -303,22 +303,6 @@ def make_req():
 def req_display():
     return render_template('req_diplay.html')
 
-    # cursor = conn.cursor()
-    # test = isEmailUnique(email)
-    # if test:
-    # 	print(cursor.execute("INSERT INTO Users (first_name, last_name, email, birth_date, hometown, gender, password, score)"
-    # 						 "VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}')".format(first_name, last_name, email, birth_date, hometown, gender, password, 0)))
-
-    # 	# Remember to edit this ^^^^ print statement for the insert!!!!!!!!!!!
-
-    # 	conn.commit()
-    # 	#log user in
-    # 	user = User()
-    # 	user.id = email
-    # 	flask_login.login_user(user)
-    # 	return render_template('hello.html', name=email, message='Account Created!', top_users=getTopScoreUsers())
-    # else:
-
 
 # home page
 @ app.route("/", methods=['GET'])
