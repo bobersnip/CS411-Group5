@@ -18,27 +18,38 @@ import requests
 import json
 import sqlite3
 
-# setting up OAuth
-from oauthlib.oauth2 import WebApplicationClient
-
-# Google config
-GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID", None)
-GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET", None)
-GOOGLE_DISCOVERY_URL = ("https://accounts.google.com/.well-known/openid-configuration")
-
 
 # for image uploading
 import os
 import base64
 
+
 mysql = MySQL()
 app = Flask(__name__)
 app.secret_key = 'ayyylmao'  # Change this!
 
+# setting up OAuth
+from authlib.integrations.flask_client import OAuth
+oauth = OAuth(app)
 
+# Google config
+GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID", None)
+GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET", None)
+GOOGLE_DISCOVERY_URL = ("https://accounts.google.com/.well-known/openid-configuration")
+google = oauth.register(
+    name='google',
+    client_id=GOOGLE_CLIENT_ID,
+    client_secret=GOOGLE_CLIENT_SECRET,
+    access_token_url='https://accounts.google.com/o/oauth2/token',
+    access_token_params=None,
+    authorize_url='https://accounts.google.com/o/oauth2/auth',
+    authorize_params=None,
+    api_base_url='https://www.googleapis.com/oauth2/v1/',
+    client_kwargs={'scope': 'openid profile email'},
+)   
 
 # These will need to be changed according to your creditionals
-app.config['MYSQL_DATABASE_USER'] = 'USER'
+app.config['MYSQL_DATABASE_USER'] = 'USERNAME'
 app.config['MYSQL_DATABASE_PASSWORD'] = 'PASSWORD'
 app.config['MYSQL_DATABASE_DB'] = 'photoshare'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
@@ -98,7 +109,6 @@ def new_page_function():
 	return new_page_html
 '''
 
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if flask.request.method == 'GET':
@@ -128,6 +138,28 @@ def login():
     return "<a href='/login'>Try again</a>\
 			</br><a href='/register'>or make an account</a>"
 
+@app.route('/login/oauth', methods=['GET', 'POST'])
+def loginOAuth():
+    google = oauth.create_client('google')
+    redirect_uri = url_for('authorize', _external = True)
+    return google.authorize_redirect(redirect_uri)
+
+@app.route('/authorize')
+def authorize():
+    google = oauth.create_client('google')
+    token = google.authorize_access_token()
+    resp = google.get('userinfo', token=token)
+    user_info = resp.json()
+    # do something with the token and profile
+    return redirect('/')
+
+@app.route('/profile')
+def profile():
+    pass
+
+@app.route('/login/callback')
+def callback():
+    pass
 
 @app.route('/logout')
 def logout():
@@ -204,7 +236,7 @@ def req_display():
     # else:
 
 
-# default page
+# home page
 @ app.route("/", methods=['GET'])
 def hello():
     return render_template('hello.html', message='Welcome to the Economic Recipe Finder!')
