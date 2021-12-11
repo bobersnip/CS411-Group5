@@ -21,6 +21,7 @@ import flask_login
 import requests
 import json
 import sqlite3
+import config
 
 # for image uploading
 import os
@@ -34,13 +35,9 @@ if os.path.exists('../database/recipe_app.db'):
 else:
     open("../database/recipe_app.db", "x")
 
-# These will need to be changed according to your creditionals
-username = "cs411"
-password = "bestclassever"
-server = "127.0.0.1"
 
 app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+mysqlconnector://{}:{}@{}/cs411".format(
-    username, password, server)
+    config.username, config.password, config.server)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.secret_key = 'ayyylmao'  # Change this!
@@ -53,14 +50,14 @@ oauth = OAuth(app)
 
 # Google config
 # we should make an env file for these later, otherwise you have to manually set environment variables for this to work
-GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID", None)
-GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET", None)
+# GOOGLE_CLIENT_ID =
+# GOOGLE_CLIENT_SECRET =
 GOOGLE_DISCOVERY_URL = (
     "https://accounts.google.com/.well-known/openid-configuration")
 google = oauth.register(
     name='google',
-    client_id=GOOGLE_CLIENT_ID,
-    client_secret=GOOGLE_CLIENT_SECRET,
+    client_id=config.GOOGLE_CLIENT_ID,
+    client_secret=config.GOOGLE_CLIENT_SECRET,
     access_token_url='https://accounts.google.com/o/oauth2/token',
     access_token_params=None,
     authorize_url='https://accounts.google.com/o/oauth2/auth',
