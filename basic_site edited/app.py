@@ -182,7 +182,7 @@ def register():
         user = User()
         user.id = email
         flask_login.login_user(user)
-        return render_template('hello.html', name=email, message='Account Created!')
+        return render_template('hello.html', name=email, message='Account Created!', logged_in=True)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -205,21 +205,21 @@ def login():
             user.id = email
             flask_login.login_user(user)  # okay login in user
             # protected is a function defined in this file
-            return redirect(url_for('login'))
+            return redirect('/')
 
     # information did not match
     return "<a href='/login'>Try again</a>\
 			</br><a href='/register'>or make an account</a>"
 
 
-@app.route('/login/oauth', methods=['GET', 'POST'])
+@ app.route('/login/oauth', methods=['GET', 'POST'])
 def loginOAuth():
     google = oauth.create_client('google')
     redirect_uri = url_for('authorize', _external=True)
     return google.authorize_redirect(redirect_uri)
 
 
-@app.route('/authorize')
+@ app.route('/authorize')
 def authorize():
     google = oauth.create_client('google')
     token = google.authorize_access_token()
@@ -229,7 +229,8 @@ def authorize():
     return redirect('/')
 
 
-@app.route('/profile')
+@ app.route('/profile')
+@ flask_login.login_required
 def profile():
     curr_user = flask_login.current_user
     user_email = curr_user.get_id()
@@ -240,30 +241,30 @@ def profile():
     return render_template('profile.html', name=user_email)
 
 
-@app.route('/login/callback')
+@ app.route('/login/callback')
 def callback():
     pass
 
 
-@app.route('/logout')
+@ app.route('/logout')
 def logout():
     flask_login.logout_user()
-    return render_template('hello.html', message='Logged out', top_users=getTopScoreUsers())
+    return render_template('hello.html', message='Logged out', logged_in=False)
 
 
-@login_manager.unauthorized_handler
+@ login_manager.unauthorized_handler
 def unauthorized_handler():
     return render_template('unauth.html')
 
 # you can specify specific methods (GET/POST) in function header instead of inside the functions as seen earlier
 
 
-@app.route("/api_req", methods=['GET'])
+@ app.route("/api_req", methods=['GET'])
 def api_req():
     return render_template('api_req.html')
 
 
-@app.route("/api_req", methods=['POST'])
+@ app.route("/api_req", methods=['POST'])
 def make_req():
     try:
         URL = "https://api.edamam.com/api/recipes/v2?type=public&"
@@ -309,9 +310,9 @@ def req_display():
 def hello():
     curr_user = flask_login.current_user
     if curr_user.is_authenticated == True:
-        return render_template('hello.html', message='Welcome to the Economic Recipe Finder!')
+        return render_template('hello.html', message='Welcome to the Economic Recipe Finder!', logged_in=True)
     else:
-        return render_template('hello.html')
+        return render_template('hello.html', logged_in=False)
 
 
 if __name__ == "__main__":

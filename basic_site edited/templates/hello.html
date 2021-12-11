@@ -8,14 +8,13 @@
   <h1>Hello {{ name }}!</h1>
 {% endif %}
 
-{% if not message %}
+{% if not logged_in %}
   <p>You should <a href='/login'>login!</a></p>
-  <p>Or, <a href='/register'>Create an account!</a></p>
+  <p>or <a href='/register'>Create an account!</a></p>
 {% else %}
-  <p> Go to <a href='/profile'>profile?</a></p>
+  <p> Go to <a href='/profile'>profile</a></p>
 <ul>
-    <li><a href='/api_req'>Make an api request</a> </li>
-
+    <li><a href='/api_req'>Make an API request</a> </li>
 </ul>
 {% endif %}
 
@@ -33,5 +32,8 @@
 {% endif %}
 
 <ul>
-<li><a href='/'>Home</a></li>
+  <li><a href='/'>Home</a></li>
+  {% if logged_in %}
+    <li><a href='/logout'>Logout</a> </li>
+  {% endif %}
 </ul>
