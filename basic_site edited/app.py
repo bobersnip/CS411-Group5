@@ -51,6 +51,7 @@ db = SQLAlchemy(app)
 oauth = OAuth(app)
 
 # Google config
+# we should make an env file for these later, otherwise you have to manually set environment variables for this to work
 GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID", None)
 GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET", None)
 GOOGLE_DISCOVERY_URL = (
@@ -150,6 +151,7 @@ def login():
 				<input type='password' name='password' id='password' placeholder='password'></input>
 				<input type='submit' name='submit'></input>
 			   </form></br>
+               or sign in using <a href='/login/oauth'>Google</a>! <br><br>
 		   <a href='/'>Home</a>
 			   '''
     # The request method is POST (page is recieving data)
