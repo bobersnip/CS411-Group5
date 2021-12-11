@@ -33,7 +33,7 @@ from authlib.integrations.flask_client import OAuth
 oauth = OAuth(app)
 
 # Google config
-GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID", None)
+GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID", None) # we should make an env file for these later, otherwise you have to manually set environment variables for this to work
 GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET", None)
 GOOGLE_DISCOVERY_URL = ("https://accounts.google.com/.well-known/openid-configuration")
 google = oauth.register(
@@ -49,8 +49,8 @@ google = oauth.register(
 )   
 
 # These will need to be changed according to your creditionals
-app.config['MYSQL_DATABASE_USER'] = 'USERNAME'
-app.config['MYSQL_DATABASE_PASSWORD'] = 'PASSWORD'
+app.config['MYSQL_DATABASE_USER'] = 'USER'
+app.config['MYSQL_DATABASE_PASSWORD'] = 'PASSWORD-'
 app.config['MYSQL_DATABASE_DB'] = 'photoshare'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 mysql.init_app(app)
@@ -118,6 +118,7 @@ def login():
 				<input type='password' name='password' id='password' placeholder='password'></input>
 				<input type='submit' name='submit'></input>
 			   </form></br>
+               or sign in using <a href='/login/oauth'>Google</a>! <br><br>
 		   <a href='/'>Home</a>
 			   '''
     # The request method is POST (page is recieving data)
