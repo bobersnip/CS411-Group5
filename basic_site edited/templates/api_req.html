@@ -1,6 +1,21 @@
-<head>
-    <title>Query the API!</title>
-</head>
+<!DOCTYPE html>
+<html>
+  <head>
+  <title>Query the API!</title>
+  <style>
+    body {
+      background-color: rgb(225, 233, 255);
+      border: solid;
+      border-radius: 20px;
+      padding: 10px;
+      text-align: center;
+    }
+  </style>
+  </head>
+
+
+
+<body>
 <!-- {%if supress == "False"%}
 <h1> Email already in use! Use another one or <a href="/login">login</a></h1>
 {% endif %} -->
@@ -9,14 +24,17 @@
 {% endif %}
     <body>
         <div class="title">
-            <h1>Enter ingredients below:</h1>
+            <h1>Search for ingredients below:</h1>
         </div>
         <div id="content">
             <form method="post" action="{{ url_for('make_req') }}">
                 <label for="ingredients">Enter ingredients to filter by (separated by commas):</label>
-                <input type="ingredients" name="ingredients" required="required"/><br />
-                <input type="submit" />
+                <input type="ingredients" name="ingredients" required="required"><br>
+                <input type="submit">
             </form>
          </div>
     </body>
-<a href='/'>Home</a>
+    <br>
+  <button style="padding: 7px;"><a href='/'> Go to Homepage</a> </button>
+</body>
+</html>
