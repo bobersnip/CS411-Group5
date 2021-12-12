@@ -12,3 +12,4 @@ pyOpenSSL
 pybase64
 config
 mysql
+mysqlclient
