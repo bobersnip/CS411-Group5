@@ -1,5 +1,20 @@
 <!-- Home page / index page -->
 <!doctype html>
+<html>
+
+  <head>
+  <style>
+    body {
+      background-color: rgb(225, 233, 255);
+      border: solid;
+      border-radius: 20px;
+      padding: 10px;
+      text-align: center;
+    }
+  </style>
+  </head>
+
+<body>
 {% if message %}
   <h4>{{message}}!</h4>
 {% endif %}
@@ -9,14 +24,18 @@
 {% endif %}
 
 {% if not logged_in %}
-  <p>You should <a href='/login'>login!</a></p>
-  <p>or <a href='/register'>Create an account!</a></p>
+  <p>You haven't login yet. Please Log in! <button style="padding: 7px;"><a href='/login'>login</a></button>
+  <p>No account? Create one! <button style="padding: 7px;"><a href='/register'>Create an account</a></button></p>   </p>
+
 {% else %}
-  <p> Go to <a href='/profile'>profile</a></p>
-<ul>
-    <li><a href='/api_req'>Make an API request</a> </li>
-</ul>
+  <button style="padding: 7px;">Go to my <a href='/profile'>profile</a></button>
+  <br><br>
+  <button style="padding: 7px;"><a href='/api_req'>Make an API request</a></button>
+  <br>
+  <br>
+
 {% endif %}
+
 
 <!-- Maybe we can utilize this html to display our ingredients or recipes -->
 {% if photos %}
@@ -31,9 +50,15 @@
     </ul>
 {% endif %}
 
-<ul>
-  <li><a href='/'>Home</a></li>
+
+
+  <!--Go to homepage or logout-->
+  <br>
+  <button style="padding: 7px;"><a href='/'> Go to Homepage</a> </button>
   {% if logged_in %}
-    <li><a href='/logout'>Logout</a> </li>
+  <button style="padding: 7px;"><a href='/logout'>Logout</a> </button>
   {% endif %}
-</ul>
+
+
+</body>
+</html>
