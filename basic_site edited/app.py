@@ -15,10 +15,11 @@ from flaskext.mysql import MySQL
 from sqlalchemy import desc, func, ForeignKey
 from sqlalchemy.sql.functions import user
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy_utils import create_database, database_exists
+import mysql
 import flask_login
 import requests
 import json
-import sqlite3
 import config
 import time
 
@@ -28,6 +29,12 @@ import base64
 
 
 app = Flask(__name__)
+
+# Create the database if it doesn't exist
+url = 'mysql://{0}:{1}@{2}/cs411'.format(
+    config.username, config.password, config.server)
+if not database_exists(url):
+    create_database(url)
 
 
 app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+mysqlconnector://{}:{}@{}/cs411".format(

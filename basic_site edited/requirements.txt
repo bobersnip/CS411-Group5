@@ -3,9 +3,11 @@ Flask-Login
 flask-mysql
 Flask-SQLAlchemy
 SQLAlchemy
+sqlalchemy-utils
 requests
 Werkzeug
 Authlib
 oauthlib
 pyOpenSSL
 base64
+mysql
