@@ -1,0 +1,16 @@
+<!doctype html>
+<html>
+    <head>
+        <title> My favorite Recipe</title>    
+    </head>
+
+    <h2> Here are My favorite recipes</h2>
+
+    {% if favorites %}
+        {% for recipes in favorites %}
+
+            <li>{{favorites[1]}}</li>
+
+        {% endfor %}
+    {% endif %}
+</html>
