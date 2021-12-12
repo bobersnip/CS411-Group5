@@ -1,7 +1,44 @@
-<form action='login' method='POST'>
-    <input type='text' name='email' id='email' placeholder='email'></input>
-    <input type='password' name='password' id='password' placeholder='password'></input>
-    <input type='submit' name='submit'></input>
-   </form></br>
-   or sign in using <a href='/login/oauth'>Google</a>! <br><br>
-<a href='/'>Home</a>
+<!doctype html>
+<html>
+
+ <head>
+  <style>
+    body {
+        background-color: rgb(225, 233, 255);
+    }
+    div {
+      border: solid;
+      border-radius: 20px;
+      padding: 10px;
+      text-align: center;
+    }
+    p {
+        display: inline;
+        position: relative;
+        right: 100px;
+    }
+ </style>
+ </head>
+
+
+<body>
+    <div class="login">
+    <form action='login' method='POST'>
+        <p> Login with Email: </p>
+        <input type='text' name='email' id='email' placeholder='Email' style="position: relative; right: 89px;"></input> 
+        <br>
+        <input type='password' name='password' id='password' placeholder='Password'></input>
+        <input type='submit' name='submit'></input>
+    </form>
+    <br>
+    <br>
+
+    <p style="position: relative; right: 160px;"> Or sign in with <a href='/login/oauth'>Google</a>!</p>
+    <br><br>
+
+  <button style="padding: 7px;"><a href='/'> Go to Homepage</a> </button>
+    </div>
+
+
+</body>
+</html>
