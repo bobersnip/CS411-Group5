@@ -1,24 +1,44 @@
-<head>
-    <title>Here are your friends:</title>
-</head>
+  <head>
+  <title>Here are the results:</title>
+  <style>
+    body {
+      background-color: rgb(225, 233, 255);
+
+    }
+    .recipe {
+      border: solid;
+      border-radius: 20px;
+      padding: 10px;
+    }
+
+  </style>
+  </head>
+
     <body>
         <div class="title">
-            <h1>Here is the API Query</h1>
+            <h1>Here is the API Query!</h1>
         </div>
         {% if message %}
           <h4>{{message}}</h4>
         {% endif %}
+
         <div id="content">
             {% if recipe_name %}
                 {% for i in index %}
-                    <h3>Here is the first recipe: {{recipe_name[i]}}</h3>
-                    <img src="{{recipe_image[i]}}"/><br>
+                    <div class="recipe">
+                    <h3 >Recipe Name: {{recipe_name[i]}}</h3>
+                    <img src="{{recipe_image[i]}}" style="border: solid;"><br>
+
+                    <p style="font-size: 16px; font-weight: bold;">Ingredients that needed for this recipe: </p>
                     {% for ingredients in recipe_ingredients[i] %}
                         <li>{{ingredients}} <br></li>
                     {% endfor %}
-                    <a href="/favorite/{{recipe_name[i]}}" class="btn btn-success btn-sm">Add to favorites</a>
+                    <button style="padding: 7px;"><a href="/favorite/{{recipe_name[i]}}" class="btn btn-success btn-sm">Add to my favorites!</a> </button>
+                    </div>
                 {% endfor %}
             {% endif %}
         </div>
     </body>
-<a href='/'>Home</a>
+
+  <br>
+  <button style="padding: 7px;"><a href='/'> Go to Homepage</a> </button>
