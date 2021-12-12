@@ -4,9 +4,12 @@
 <!-- {%if supress == "False"%}
 <h1> Email already in use! Use another one or <a href="/login">login</a></h1>
 {% endif %} -->
+{% if message %}
+    <h4>{{message}}</h4>
+{% endif %}
     <body>
         <div class="title">
-            <h1>Enter your information below</h1>
+            <h1>Enter ingredients below:</h1>
         </div>
         <div id="content">
             <form method="post" action="{{ url_for('make_req') }}">

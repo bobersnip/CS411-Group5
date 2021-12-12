@@ -323,9 +323,9 @@ def add_to_favorites(recipe_name):
     for ingredient in recipe_ingredients:
         ingredients += ("{}, ".format(ingredient))
 
-    print("ingredients: " + ingredients)
+    # print("ingredients: " + ingredients)
     curr_user = flask_login.current_user.get_id()
-    print("current_user: " + curr_user)
+    # print("current_user: " + curr_user)
     # try to add the entry, it may already be in the favorites
     try:
         new_favorite = Favorites(
