@@ -26,13 +26,6 @@ import base64
 mysql = MySQL()
 app = Flask(__name__)
 
-# check for the database file
-if os.path.exists('../database/recipe_app.db'):
-    pass
-else:
-    open("../database/recipe_app.db", "x")
-
-
 app.config['MYSQL_DATABASE_DB'] = 'cs411'
 
 app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+mysqlconnector://{}:{}@{}/cs411".format(
