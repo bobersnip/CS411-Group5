@@ -295,7 +295,7 @@ def make_req():
     recipe_name = []
     recipe_image = []
     recipe_ingredients = []
-    index = [x for x in range(20)]
+    index = [x for x in range(10)]
 
     # kroger api stuff
 
@@ -322,7 +322,7 @@ def make_req():
                      "Authorization": "Bearer " + access_token}
 
     prices_sorter = []
-    api_data = json.loads(response.text)["hits"][0:20]
+    api_data = json.loads(response.text)["hits"][0:10]
     for i in range(len(api_data)):
 
         # make sure no duplicate ingredients appear
