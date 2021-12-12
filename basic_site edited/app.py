@@ -22,6 +22,7 @@ import requests
 import json
 import sqlite3
 import config
+import time
 
 # for image uploading
 import os
@@ -290,38 +291,100 @@ def api_req():
 
 @app.route("/api_req", methods=['POST'])
 def make_req():
-    try:
-        URL = "https://api.edamam.com/api/recipes/v2?type=public&"
-        api_key_append = "&app_id=4c5b6d9d&app_key=09c2de772eaeb7fd5d30b135fb041c8f"
-        ingredients = request.form.get('ingredients')
-        ingredients = "q=" + ingredients
-        query_url = URL + ingredients + api_key_append
-        print(query_url)
-        response = requests.get(query_url)
-        # print(response.text["hits"])
+    start = time.time()
+    URL = "https://api.edamam.com/api/recipes/v2?type=public&"
+    api_key_append = "&app_id=4c5b6d9d&app_key=09c2de772eaeb7fd5d30b135fb041c8f"
+    ingredients = request.form.get('ingredients')
+    ingredients = "q=" + ingredients
+    query_url = URL + ingredients + api_key_append
+    #print(query_url)
+    response = requests.get(query_url)
+    # print(response.text["hits"])
+    recipe_name = []
+    recipe_image = []
+    recipe_ingredients = []
+    index = [x for x in range(20)]
+    
+    ##kroger api stuff
+    
+    #Get access token from kroger
+    kroger_client_id = "recipeingredientsprices-b099514b5746a51f59bb2aaab456e0886003954412832050940"
+    kroger_client_secret = "yhSnzXMzYTgRRDy0eW3UjaCKALD4FqDE3s2Y6Deu"
+    id_encode = kroger_client_id + ":" + kroger_client_secret
+    id_encode = id_encode.encode("ascii")
+    kroger_client_id64 = base64.b64encode(id_encode)
+    k64u = kroger_client_id64.decode("ascii")
+    url_kroger_access = "https://api.kroger.com/v1/connect/oauth2/token"
+    payload_kroger_access = {"grant_type": "client_credentials", "scope": "product.compact"}
+    headers_kroger_access = {'Authorization': 'Basic ' + k64u, 'Content-Type': 'application/x-www-form-urlencoded'}
+    response_kroger = requests.request("POST", url_kroger_access, headers=headers_kroger_access, data=payload_kroger_access)
+    access_token = json.loads(response_kroger.text)["access_token"]
+    
+    #set up for the prices api call for kroger
+    url_prices = "https://api.kroger.com/v1/products?filter.term="
+    payload_prices = {}
+    header_prices = {"Accept": "application/json", "Authorization": "Bearer " + access_token}
 
-        recipe_name = []
-        recipe_image = []
-        recipe_ingredients = []
-        index = [x for x in range(20)]
+    prices_sorter = []
+    api_data = json.loads(response.text)["hits"][0:20]
+    for i in range(len(api_data)):
+        
+           #make sure no duplicate ingredients appear
+           ingredients_list = []
+           [ingredients_list.append(x["text"]) for x in api_data[i]["recipe"]["ingredients"] if x["text"] not in ingredients_list]
+           ingredientLines_list = []
+           [ingredientLines_list.append(x) for x in api_data[i]["recipe"]["ingredientLines"] if x not in ingredientLines_list]
+           
+           num_ingredients = min(len(ingredients_list), len(ingredientLines_list))
+           recipe_ingredients += [[0]*(num_ingredients+1)]
 
-        api_data = json.loads(response.text)["hits"][0:20]
-        for hit in api_data:
-            recipe_name += [hit["recipe"]["label"]]
-            # print(recipe_name)
-            recipe_image += [hit["recipe"]["image"]]
-            # print(recipe_image)
-            recipe_ingredients += [hit["recipe"]["ingredientLines"]]
-            # print(recipe_ingredients)
+           recipe_price = 0.00
+           for j in range(num_ingredients):
+               ingredient_search = api_data[i]["recipe"]["ingredients"][j]["food"]
+               
+               try:
+                   #get the price of the current ingredient
+                   response_prices = requests.request("GET", url_prices + ingredient_search + "&filter.locationId=01400943&filter.limit=1", headers=header_prices, data=payload_prices, timeout = 3)
+                   
+                   try:
+                       response_prices_json = json.loads(response_prices.text)
+                       price_float = round(response_prices_json["data"][0]["items"][0]["price"]["regular"], 3)
+                       recipe_price += price_float
+                       price_string = str(price_float)
+                       print(price_string)
+                       recipe_ingredients[i][j] = api_data[i]["recipe"]["ingredientLines"][j] + " Price: $" + price_string
+                   except:
+                       print("data not found")
+                       recipe_ingredients[i][j] = api_data[i]["recipe"]["ingredientLines"][j] + " Price: N/A not found"
+               except requests.exceptions.Timeout as err:
+                   print("data not found")
+                   recipe_ingredients[i][j] = api_data[i]["recipe"]["ingredientLines"][j] + " Price: N/A took too long to respond"
 
-        return render_template('req_display.html', recipe_name=recipe_name, recipe_image=recipe_image, recipe_ingredients=recipe_ingredients, index=index)
+               print()
+               print(recipe_ingredients[i][j])
+               print("done")
+           print("recipe total = $" + str(recipe_price))
+           recipe_name += [api_data[i]["recipe"]["label"]]
+           recipe_image += [api_data[i]["recipe"]["image"]]
+           recipe_ingredients[i][num_ingredients] = "Total recipe price = $" + str(round(recipe_price,3))
+           prices_sorter += [[i, round(recipe_price, 3)]]
+           
+           
+    #Sorting recipies based on price
+    prices_sorter = sorted(prices_sorter, key=lambda x: x[1])
+    names_sorted = []
+    images_sorted = []
+    recipe_sorted = []
+    for i in range(len(prices_sorter)):
+        names_sorted += [recipe_name[prices_sorter[i][0]]]
+        images_sorted += [recipe_image[prices_sorter[i][0]]]
+        recipe_sorted += [recipe_ingredients[prices_sorter[i][0]]]
+        
+    end = time.time()
+    print("The search took " + str(end - start) + " seconds!")
+    
 
-        # Do something here :XXXXXXXXXXXXXXXXXXXXXXXXx
-
-    except:
-        # this prints to shell, end users will not see this (all print statements go to shell)
-        print("couldn't find all tokens")
-        return flask.redirect(flask.url_for('api_req'))
+    return render_template('req_display.html', recipe_name=names_sorted, recipe_image=images_sorted, recipe_ingredients=recipe_sorted, index=index)
 
 
 @app.route("/favorite/<recipe_name>/", methods=['GET', 'POST'])
