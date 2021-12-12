@@ -7,10 +7,10 @@ To get the skeleton running, open a terminal and do the following:
 
 Intermediate steps:
 - Start your sql server by opening an administrator command prompt and using 'mysqld' and then 'net start MySQL80'
-- Then use 'mysql -u root -h 127.0.0.1 -p'
+- Then use 'mysql -u <YOUR SQL USERNAME> -h 127.0.0.1 -p' and then type in your password
 
 
 	5. open app.py using your favorite editor, change #PASSWORD in 'app.config['MYSQL_DATABASE_PASSWORD'] = '#PASSWORD'' to your MySQL root password
 
-	6. back to the terminal, run the app 'python -m flask run' (or use python3)
+	6. back to the terminal, run the app 'python app.py' (or use python3)
 	7. open your browser, and open the local website 'localhost:5000'
