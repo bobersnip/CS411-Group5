@@ -12,7 +12,7 @@
 
 from authlib.integrations.flask_client import OAuth
 import flask
-from flask import Flask, Response, request, render_template, redirect, url_for
+from flask import Flask, Response, request, render_template, redirect, url_fors
 from flaskext.mysql import MySQL
 from sqlalchemy import desc, func, ForeignKey
 from sqlalchemy.sql.functions import user
@@ -26,7 +26,7 @@ import config
 # for image uploading
 import os
 
-
+mysql = MySQL()
 app = Flask(__name__)
 
 # check for the database file
@@ -36,14 +36,21 @@ else:
     open("../database/recipe_app.db", "x")
 
 
+app.config['MYSQL_DATABASE_DB'] = 'cs411'
+
 app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+mysqlconnector://{}:{}@{}/cs411".format(
     config.username, config.password, config.server)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['TEMPLATES_AUTO_RELOAD'] = True
+mysql.init_app(app)
 
 app.secret_key = 'ayyylmao'  # Change this!
 
 db = SQLAlchemy(app)
+
+# connect with MySQL
+conn = mysql.connect()
+cursor = conn.cursor()
 
 
 # setting up OAuth
@@ -239,11 +246,23 @@ def authorize():
 def profile():
     curr_user = flask_login.current_user
     user_email = curr_user.get_id()
+
     # TODO UPDATE THIS WITH FRIEND INFO?
     # TODO UPDATE THIS WITH FAVORITED RECIPES
     # TODO UPDATE THIS WITH CURRENT INGREDIENTS THE USER HAS
 
     return render_template('profile.html', name=user_email)
+
+
+@app.route("/favorite")
+@flask_login.login_required
+def get_user_favorite_recipe():
+
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM favorites")
+
+    data = cursor.fetchall()
+    return render_template("favorite.html", data=data)
 
 
 @ app.route('/login/callback')
