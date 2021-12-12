@@ -40,6 +40,7 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+mysqlconnector://{}:{}@{}/cs411".
     config.username, config.password, config.server)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['TEMPLATES_AUTO_RELOAD'] = True
+
 app.secret_key = 'ayyylmao'  # Change this!
 
 db = SQLAlchemy(app)
@@ -81,6 +82,13 @@ class Friends(db.Model):
         'users.id'), onupdate="CASCADE", primary_key=True)
     user_id2 = db.Column(db.Integer, ForeignKey(
         'users.id'), onupdate="CASCADE", primary_key=True)
+
+
+class Favorites(db.Model):
+    user = db.Column(db.String(100), ForeignKey(
+        'users.email'), onupdate="CASCADE", primary_key=True)
+    name = db.Column(db.String(100), primary_key=True)
+    ingredients = db.Column(db.Text(10000))
 
 
 db.create_all()
@@ -261,7 +269,7 @@ def api_req():
     return render_template('api_req.html')
 
 
-@ app.route("/api_req", methods=['POST'])
+@app.route("/api_req", methods=['POST'])
 def make_req():
     try:
         URL = "https://api.edamam.com/api/recipes/v2?type=public&"
@@ -297,7 +305,39 @@ def make_req():
         return flask.redirect(flask.url_for('api_req'))
 
 
-@ app.route("/req_display", methods=['GET'])
+@app.route("/favorite/<recipe_name>/", methods=['GET', 'POST'])
+@flask_login.login_required
+def add_to_favorites(recipe_name):
+    URL = "https://api.edamam.com/api/recipes/v2?type=public&"
+    api_key_append = "&app_id=4c5b6d9d&app_key=09c2de772eaeb7fd5d30b135fb041c8f"
+    recipe = "q=" + recipe_name
+    query_url = URL + recipe + api_key_append
+    print(query_url)
+    response = requests.get(query_url)
+    # print(response.text["hits"])
+
+    api_data = json.loads(response.text)["hits"][0]
+    recipe_image = api_data["recipe"]["image"]
+    recipe_ingredients = api_data["recipe"]["ingredientLines"]
+    ingredients = ""
+    for ingredient in recipe_ingredients:
+        ingredients += ("{}, ".format(ingredient))
+
+    print("ingredients: " + ingredients)
+    curr_user = flask_login.current_user.get_id()
+    print("current_user: " + curr_user)
+    # try to add the entry, it may already be in the favorites
+    try:
+        new_favorite = Favorites(
+            user=curr_user, name=recipe_name, ingredients=ingredients)
+        db.session.add(new_favorite)
+        db.session.commit()
+        return render_template('api_req.html', message=recipe_name + " added to favorites")
+    except:
+        return render_template('api_req.html', message="recipe already in favorites, or another error occurred.")
+
+
+@app.route("/req_display", methods=['GET'])
 def req_display():
     return render_template('req_diplay.html')
 

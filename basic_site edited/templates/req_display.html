@@ -16,6 +16,7 @@
                     {% for ingredients in recipe_ingredients[i] %}
                         <li>{{ingredients}} <br></li>
                     {% endfor %}
+                    <a href="/favorite/{{recipe_name[i]}}" class="btn btn-success btn-sm">Add to favorites</a>
                 {% endfor %}
             {% endif %}
         </div>
