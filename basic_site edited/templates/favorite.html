@@ -1,16 +1,48 @@
 <!doctype html>
 <html>
-    <head>
-        <title> My favorite Recipe</title>    
-    </head>
+  <head>
+      <title> My favorite Recipe</title>   
+  <style>
+    body {
+      background-color: rgb(225, 233, 255);
+      border: solid;
+      border-radius: 20px;
+      padding: 10px;
+      text-align: center;
+    }
+    table{
+        border-collapse: collapse;
+        margin: 15px;
+    }
+    th, td{
+        border: 1px solid black;
+        width: 200px;
+        text-align: left;
+        padding: 5px;
+    }
+  </style>
+  </head>
 
-    <h2> Here are My favorite recipes</h2>
+    <h2> Here are my favorite recipes!</h2>
 
-    {% if favorites %}
-        {% for recipes in favorites %}
+    <table>
+        <tr>
+            <th>Recipe Name</th>
+            <th>Recipe Ingredients</th>
+        </tr>
+        
+        <tr>
+            {% if data %}
+                {% for recipes in data %}
+                <tr>
+                    <td>{{recipes[1]}}</td>
+                    <td style="width: 700px;">{{recipes[2]}}</td>
+                </tr>  
+                {% endfor %}
+            {% endif %}
+        </tr>
+    
+    </table>
 
-            <li>{{favorites[1]}}</li>
 
-        {% endfor %}
-    {% endif %}
 </html>
