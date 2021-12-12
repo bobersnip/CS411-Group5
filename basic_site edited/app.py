@@ -1,3 +1,4 @@
+
 ######################################
 # Some code adapted from
 # CodeHandBook at http://codehandbook.org/python-web-application-development-using-flask-and-mysql/
@@ -20,13 +21,14 @@ import json
 import sqlite3
 import config
 import time
+
+# for image uploading
 import os
 import base64
 
-mysql = MySQL()
+
 app = Flask(__name__)
 
-app.config['MYSQL_DATABASE_DB'] = 'cs411'
 
 app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+mysqlconnector://{}:{}@{}/cs411".format(
     config.username, config.password, config.server)
@@ -38,10 +40,18 @@ app.secret_key = 'ayyylmao'  # Change this!
 
 db = SQLAlchemy(app)
 
-# connect with MySQL
-# conn = mysql.connect()
-# cursor = conn.cursor()
 
+# mySQL database
+mysql = MySQL()
+app.config['MYSQL_DATABASE_USER'] = 'root'
+# change your password for mysql database
+app.config['MYSQL_DATABASE_PASSWORD'] = 'Lkh1999426.'
+
+app.config['MYSQL_DATABASE_DB'] = 'cs411'
+app.config['MYSQL_DATABASE_HOST'] = 'localhost'
+mysql.init_app(app)
+conn = mysql.connect()
+cursor = conn.cursor()
 
 # setting up OAuth
 oauth = OAuth(app)
@@ -210,8 +220,7 @@ def login():
             return redirect('/')
 
     # information did not match
-    return "<a href='/login'>Try again</a>\
-			</br><a href='/register'>or make an account</a>"
+    return render_template('failLogin.html')
 
 
 @ app.route('/login/oauth', methods=['GET', 'POST'])
@@ -247,15 +256,10 @@ def profile():
 @app.route("/favorite")
 @flask_login.login_required
 def get_user_favorite_recipe():
-
-    # cursor = conn.cursor()
-    # cursor.execute("SELECT * FROM favorites")
-
-    # data = cursor.fetchall()
-    curr_user = flask_login.current_user.get_id()
-    data = db.session.query(
-        "* FROM favorites WHERE user = {}".format(curr_user))
-    return render_template("favorite.html", data=data)
+    cursor = conn.cursor()
+    cursor.execute(("SELECT * FROM favorites"))
+    data = cursor.fetchall()
+    return render_template('favorite.html', data=data)
 
 
 @ app.route('/login/callback')
@@ -281,7 +285,7 @@ def api_req():
     return render_template('api_req.html')
 
 
-@app.route("/api_req", methods=['POST'])
+@ app.route("/api_req", methods=['POST'])
 def make_req():
     start = time.time()
     URL = "https://api.edamam.com/api/recipes/v2?type=public&"
@@ -389,8 +393,8 @@ def make_req():
     return render_template('req_display.html', recipe_name=names_sorted, recipe_image=images_sorted, recipe_ingredients=recipe_sorted, index=index)
 
 
-@app.route("/favorite/<recipe_name>/", methods=['GET', 'POST'])
-@flask_login.login_required
+@ app.route("/favorite/<recipe_name>/", methods=['GET', 'POST'])
+@ flask_login.login_required
 def add_to_favorites(recipe_name):
     URL = "https://api.edamam.com/api/recipes/v2?type=public&"
     api_key_append = "&app_id=4c5b6d9d&app_key=09c2de772eaeb7fd5d30b135fb041c8f"
@@ -421,7 +425,7 @@ def add_to_favorites(recipe_name):
         return render_template('api_req.html', message="recipe already in favorites, or another error occurred.")
 
 
-@app.route("/req_display", methods=['GET'])
+@ app.route("/req_display", methods=['GET'])
 def req_display():
     return render_template('req_diplay.html')
 
