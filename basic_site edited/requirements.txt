@@ -9,5 +9,6 @@ Werkzeug
 Authlib
 oauthlib
 pyOpenSSL
-base64
+pybase64
+config
 mysql
