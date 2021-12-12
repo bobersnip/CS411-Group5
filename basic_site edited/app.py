@@ -42,16 +42,16 @@ db = SQLAlchemy(app)
 
 
 # mySQL database
-mysql = MySQL()
-app.config['MYSQL_DATABASE_USER'] = 'root'
-# change your password for mysql database
-app.config['MYSQL_DATABASE_PASSWORD'] = 'bestclassever'
+# mysql = MySQL()
+# app.config['MYSQL_DATABASE_USER'] = 'root'
+# # change your password for mysql database
+# app.config['MYSQL_DATABASE_PASSWORD'] = 'bestclassever'
 
-app.config['MYSQL_DATABASE_DB'] = 'cs411'
-app.config['MYSQL_DATABASE_HOST'] = 'localhost'
-mysql.init_app(app)
-conn = mysql.connect()
-cursor = conn.cursor()
+# app.config['MYSQL_DATABASE_DB'] = 'cs411'
+# app.config['MYSQL_DATABASE_HOST'] = 'localhost'
+# mysql.init_app(app)
+# conn = mysql.connect()
+# cursor = conn.cursor()
 
 # setting up OAuth
 oauth = OAuth(app)
@@ -135,10 +135,6 @@ def request_loader(request):
         return
     user = User()
     user.id = email
-    # cursor = mysql.connect().cursor()
-    # cursor.execute(
-    #     "SELECT password FROM Users WHERE email = '{0}'".format(email))
-    # data = cursor.fetchall()
     data = db.session.query(
         "password FROM Users WHERE email = '{0}'".format(email))
     if data != None:
@@ -159,7 +155,7 @@ def new_page_function():
 
 def email_is_registered(email):
     data = db.session.query(
-        "email  FROM Users WHERE email = '{0}'".format(email)).first()
+        "email FROM Users WHERE email = '{0}'".format(email)).first()
     if data == None:
         return False
     else:
@@ -256,9 +252,9 @@ def profile():
 @app.route("/favorite")
 @flask_login.login_required
 def get_user_favorite_recipe():
-    cursor = conn.cursor()
-    cursor.execute(("SELECT * FROM favorites"))
-    data = cursor.fetchall()
+    curr_user = flask_login.current_user.get_id()
+    data = db.session.query(Favorites.name, Favorites.ingredients).filter(
+        Favorites.user == curr_user).all()
     return render_template('favorite.html', data=data)
 
 
