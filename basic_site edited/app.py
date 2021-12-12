@@ -40,19 +40,6 @@ app.secret_key = 'ayyylmao'  # Change this!
 
 db = SQLAlchemy(app)
 
-
-# mySQL database
-# mysql = MySQL()
-# app.config['MYSQL_DATABASE_USER'] = 'root'
-# # change your password for mysql database
-# app.config['MYSQL_DATABASE_PASSWORD'] = 'bestclassever'
-
-# app.config['MYSQL_DATABASE_DB'] = 'cs411'
-# app.config['MYSQL_DATABASE_HOST'] = 'localhost'
-# mysql.init_app(app)
-# conn = mysql.connect()
-# cursor = conn.cursor()
-
 # setting up OAuth
 oauth = OAuth(app)
 
@@ -232,6 +219,19 @@ def authorize():
     token = google.authorize_access_token()
     resp = google.get('userinfo', token=token)
     user_info = resp.json()
+
+    try:
+        new_user = Users(first_name=user_info["given_name"],
+                         last_name=user_info["family_name"], email=user_info["email"], password=user_info["id"])
+        db.session.add(new_user)
+        db.session.commit()
+    except:
+        redirect('/')
+
+    user = User()
+    user.id = user_info["email"]
+    # print(user_info)
+    flask_login.login_user(user)
     # do something with the token and profile
     return redirect('/')
 
