@@ -45,7 +45,7 @@ db = SQLAlchemy(app)
 mysql = MySQL()
 app.config['MYSQL_DATABASE_USER'] = 'root'
 # change your password for mysql database
-app.config['MYSQL_DATABASE_PASSWORD'] = 'Lkh1999426.'
+app.config['MYSQL_DATABASE_PASSWORD'] = 'bestclassever'
 
 app.config['MYSQL_DATABASE_DB'] = 'cs411'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
