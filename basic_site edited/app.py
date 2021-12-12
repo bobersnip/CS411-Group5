@@ -1,7 +1,4 @@
 ######################################
-# author ben lawson <balawson@bu.edu>
-# Edited by: Craig Einstein <einstein@bu.edu>
-######################################
 # Some code adapted from
 # CodeHandBook at http://codehandbook.org/python-web-application-development-using-flask-and-mysql/
 # and MaxCountryMan at https://github.com/maxcountryman/flask-login/
@@ -12,7 +9,7 @@
 
 from authlib.integrations.flask_client import OAuth
 import flask
-from flask import Flask, Response, request, render_template, redirect, url_fors
+from flask import Flask, Response, request, render_template, redirect, url_for
 from flaskext.mysql import MySQL
 from sqlalchemy import desc, func, ForeignKey
 from sqlalchemy.sql.functions import user
@@ -23,9 +20,8 @@ import json
 import sqlite3
 import config
 import time
-
-# for image uploading
 import os
+import base64
 
 mysql = MySQL()
 app = Flask(__name__)
@@ -43,15 +39,15 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+mysqlconnector://{}:{}@{}/cs411".
     config.username, config.password, config.server)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['TEMPLATES_AUTO_RELOAD'] = True
-mysql.init_app(app)
+# mysql.init_app(app)
 
 app.secret_key = 'ayyylmao'  # Change this!
 
 db = SQLAlchemy(app)
 
 # connect with MySQL
-conn = mysql.connect()
-cursor = conn.cursor()
+# conn = mysql.connect()
+# cursor = conn.cursor()
 
 
 # setting up OAuth
@@ -259,10 +255,13 @@ def profile():
 @flask_login.login_required
 def get_user_favorite_recipe():
 
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM favorites")
+    # cursor = conn.cursor()
+    # cursor.execute("SELECT * FROM favorites")
 
-    data = cursor.fetchall()
+    # data = cursor.fetchall()
+    curr_user = flask_login.current_user.get_id()
+    data = db.session.query(
+        "* FROM favorites WHERE user = {}".format(curr_user))
     return render_template("favorite.html", data=data)
 
 
@@ -297,17 +296,17 @@ def make_req():
     ingredients = request.form.get('ingredients')
     ingredients = "q=" + ingredients
     query_url = URL + ingredients + api_key_append
-    #print(query_url)
+    # print(query_url)
     response = requests.get(query_url)
     # print(response.text["hits"])
     recipe_name = []
     recipe_image = []
     recipe_ingredients = []
     index = [x for x in range(20)]
-    
-    ##kroger api stuff
-    
-    #Get access token from kroger
+
+    # kroger api stuff
+
+    # Get access token from kroger
     kroger_client_id = "recipeingredientsprices-b099514b5746a51f59bb2aaab456e0886003954412832050940"
     kroger_client_secret = "yhSnzXMzYTgRRDy0eW3UjaCKALD4FqDE3s2Y6Deu"
     id_encode = kroger_client_id + ":" + kroger_client_secret
@@ -315,62 +314,73 @@ def make_req():
     kroger_client_id64 = base64.b64encode(id_encode)
     k64u = kroger_client_id64.decode("ascii")
     url_kroger_access = "https://api.kroger.com/v1/connect/oauth2/token"
-    payload_kroger_access = {"grant_type": "client_credentials", "scope": "product.compact"}
-    headers_kroger_access = {'Authorization': 'Basic ' + k64u, 'Content-Type': 'application/x-www-form-urlencoded'}
-    response_kroger = requests.request("POST", url_kroger_access, headers=headers_kroger_access, data=payload_kroger_access)
+    payload_kroger_access = {
+        "grant_type": "client_credentials", "scope": "product.compact"}
+    headers_kroger_access = {'Authorization': 'Basic ' + k64u,
+                             'Content-Type': 'application/x-www-form-urlencoded'}
+    response_kroger = requests.request(
+        "POST", url_kroger_access, headers=headers_kroger_access, data=payload_kroger_access)
     access_token = json.loads(response_kroger.text)["access_token"]
-    
-    #set up for the prices api call for kroger
+
+    # set up for the prices api call for kroger
     url_prices = "https://api.kroger.com/v1/products?filter.term="
     payload_prices = {}
-    header_prices = {"Accept": "application/json", "Authorization": "Bearer " + access_token}
+    header_prices = {"Accept": "application/json",
+                     "Authorization": "Bearer " + access_token}
 
     prices_sorter = []
     api_data = json.loads(response.text)["hits"][0:20]
     for i in range(len(api_data)):
-        
-           #make sure no duplicate ingredients appear
-           ingredients_list = []
-           [ingredients_list.append(x["text"]) for x in api_data[i]["recipe"]["ingredients"] if x["text"] not in ingredients_list]
-           ingredientLines_list = []
-           [ingredientLines_list.append(x) for x in api_data[i]["recipe"]["ingredientLines"] if x not in ingredientLines_list]
-           
-           num_ingredients = min(len(ingredients_list), len(ingredientLines_list))
-           recipe_ingredients += [[0]*(num_ingredients+1)]
 
-           recipe_price = 0.00
-           for j in range(num_ingredients):
-               ingredient_search = api_data[i]["recipe"]["ingredients"][j]["food"]
-               
-               try:
-                   #get the price of the current ingredient
-                   response_prices = requests.request("GET", url_prices + ingredient_search + "&filter.locationId=01400943&filter.limit=1", headers=header_prices, data=payload_prices, timeout = 3)
-                   
-                   try:
-                       response_prices_json = json.loads(response_prices.text)
-                       price_float = round(response_prices_json["data"][0]["items"][0]["price"]["regular"], 3)
-                       recipe_price += price_float
-                       price_string = str(price_float)
-                       print(price_string)
-                       recipe_ingredients[i][j] = api_data[i]["recipe"]["ingredientLines"][j] + " Price: $" + price_string
-                   except:
-                       print("data not found")
-                       recipe_ingredients[i][j] = api_data[i]["recipe"]["ingredientLines"][j] + " Price: N/A not found"
-               except requests.exceptions.Timeout as err:
-                   print("data not found")
-                   recipe_ingredients[i][j] = api_data[i]["recipe"]["ingredientLines"][j] + " Price: N/A took too long to respond"
+        # make sure no duplicate ingredients appear
+        ingredients_list = []
+        [ingredients_list.append(x["text"]) for x in api_data[i]["recipe"]
+         ["ingredients"] if x["text"] not in ingredients_list]
+        ingredientLines_list = []
+        [ingredientLines_list.append(
+            x) for x in api_data[i]["recipe"]["ingredientLines"] if x not in ingredientLines_list]
 
-               print()
-               print(recipe_ingredients[i][j])
-               print("done")
-           print("recipe total = $" + str(recipe_price))
-           recipe_name += [api_data[i]["recipe"]["label"]]
-           recipe_image += [api_data[i]["recipe"]["image"]]
-           recipe_ingredients[i][num_ingredients] = "Total recipe price = $" + str(round(recipe_price,3))
-           prices_sorter += [[i, round(recipe_price, 3)]]
-           
-           
-    #Sorting recipies based on price
+        num_ingredients = min(len(ingredients_list), len(ingredientLines_list))
+        recipe_ingredients += [[0]*(num_ingredients+1)]
+
+        recipe_price = 0.00
+        for j in range(num_ingredients):
+            ingredient_search = api_data[i]["recipe"]["ingredients"][j]["food"]
+
+            try:
+                # get the price of the current ingredient
+                response_prices = requests.request(
+                    "GET", url_prices + ingredient_search + "&filter.locationId=01400943&filter.limit=1", headers=header_prices, data=payload_prices, timeout=3)
+
+                try:
+                    response_prices_json = json.loads(response_prices.text)
+                    price_float = round(
+                        response_prices_json["data"][0]["items"][0]["price"]["regular"], 3)
+                    recipe_price += price_float
+                    price_string = str(price_float)
+                    print(price_string)
+                    recipe_ingredients[i][j] = api_data[i]["recipe"]["ingredientLines"][j] + \
+                        " Price: $" + price_string
+                except:
+                    print("data not found")
+                    recipe_ingredients[i][j] = api_data[i]["recipe"]["ingredientLines"][j] + \
+                        " Price: N/A not found"
+            except requests.exceptions.Timeout as err:
+                print("data not found")
+                recipe_ingredients[i][j] = api_data[i]["recipe"]["ingredientLines"][j] + \
+                    " Price: N/A took too long to respond"
+
+            print()
+            print(recipe_ingredients[i][j])
+            print("done")
+        print("recipe total = $" + str(recipe_price))
+        recipe_name += [api_data[i]["recipe"]["label"]]
+        recipe_image += [api_data[i]["recipe"]["image"]]
+        recipe_ingredients[i][num_ingredients] = "Total recipe price = $" + \
+            str(round(recipe_price, 3))
+        prices_sorter += [[i, round(recipe_price, 3)]]
+
+    # Sorting recipies based on price
     prices_sorter = sorted(prices_sorter, key=lambda x: x[1])
     names_sorted = []
     images_sorted = []
@@ -379,10 +389,9 @@ def make_req():
         names_sorted += [recipe_name[prices_sorter[i][0]]]
         images_sorted += [recipe_image[prices_sorter[i][0]]]
         recipe_sorted += [recipe_ingredients[prices_sorter[i][0]]]
-        
+
     end = time.time()
     print("The search took " + str(end - start) + " seconds!")
-    
 
     return render_template('req_display.html', recipe_name=names_sorted, recipe_image=images_sorted, recipe_ingredients=recipe_sorted, index=index)
 
