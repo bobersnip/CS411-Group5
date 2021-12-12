@@ -1,19 +1,40 @@
 <!-- author ben lawson (balawson@bu.edu) -->
 <!doctype html>
+<html>
 <title>Profile</title>
+
+  <head>
+  <style>
+    body {
+      background-color: rgb(225, 233, 255);
+      border: solid;
+      border-radius: 20px;
+      padding: 10px;
+      text-align: center;
+    }
+  </style>
+  </head>
+
+<body>
 {% if name %}
   <h1>Hello {{ name }}!</h1>
 {% endif %}
 {% if message is none %}
   <p>You should <a href='/login'>login!</a></p>
   <p>Or, <a href='/register'>Register for an account!</a></p>
-{% else %}
-  <p> Go to <a href='/profile'>profile?</a></p>
-<ul>
-    <li><a href='/api_req'>Make an api request</a> </li>
 
-</ul>
+{% else %}
+  <p style="position: relative; right: 80px; display: inline;"> You can:</p>
+  <button style="padding: 7px; position: relative; right: 30px;"> Go to my <a href='/profile'>profile</a> </button>
+  <br>
+  <button style="padding: 7px;"><a href='/api_req'>Make an api request</a></button>
+  <br>
+  <button style="padding: 7px;"><a href ='/favorite'> Check out My favorite recipe </a></button>
+  <br><br>
+  
 {% endif %}
+
+
 
 {% if photos %}
 <h2>Here are your photos</h2>
@@ -34,8 +55,12 @@
     {% endfor %}
 {% endif %}
 
-<ul>
-  <li><a href='/'>Home</a></li>
-  <li><a href='/logout'>Logout</a> </li>
-</ul>
 
+
+<br>
+<button style="padding: 7px;"><a href='/'>Go to Homepage</a> </button>
+<button style="padding: 7px;"><a href='/logout'>Logout</a></button>
+
+
+</body>
+</html>
