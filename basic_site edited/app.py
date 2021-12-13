@@ -11,12 +11,10 @@
 from authlib.integrations.flask_client import OAuth
 import flask
 from flask import Flask, Response, request, render_template, redirect, url_for
-from flaskext.mysql import MySQL
 from sqlalchemy import desc, func, ForeignKey
 from sqlalchemy.sql.functions import user
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy_utils import create_database, database_exists
-import mysql
 import flask_login
 import requests
 import json
@@ -129,8 +127,11 @@ def request_loader(request):
         return
     user = User()
     user.id = email
-    data = db.session.query(
-        "password FROM Users WHERE email = '{0}'".format(email))
+    # data = db.session.query(
+    #     "password FROM Users WHERE email = '{0}'".format(email))
+    data = db.session.query(Users.password).filter(
+        Users.email == user.id).first()
+    print(data)
     if data != None:
         pwd = str(data[0][0])
         user.is_authenticated = request.form['password'] == pwd
@@ -294,6 +295,7 @@ def make_req():
     URL = "https://api.edamam.com/api/recipes/v2?type=public&"
     api_key_append = "&app_id=4c5b6d9d&app_key=09c2de772eaeb7fd5d30b135fb041c8f"
     ingredients = request.form.get('ingredients')
+    ingredients.split(", ")
     ingredients = "q=" + ingredients
     query_url = URL + ingredients + api_key_append
     # print(query_url)
