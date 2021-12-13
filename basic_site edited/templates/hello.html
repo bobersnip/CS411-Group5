@@ -24,14 +24,13 @@
 {% endif %}
 
 {% if not logged_in %}
-  <p>You haven't login yet. Please Log in! <button style="padding: 7px;"><a href='/login'>login</a></button>
+  <p>You haven't logged in yet. Please Log in! <button style="padding: 7px;"><a href='/login'>login</a></button>
   <p>No account? Create one! <button style="padding: 7px;"><a href='/register'>Create an account</a></button></p>   </p>
 
 {% else %}
-  <button style="padding: 7px;">Go to my <a href='/profile'>profile</a></button>
+  <button style="padding: 7px;"><a href='/profile'>Go to your profile</a></button>
   <br><br>
   <button style="padding: 7px;"><a href='/api_req'>Make an API request</a></button>
-  <br>
   <br>
 
 {% endif %}
@@ -52,9 +51,9 @@
 
 
 
+
   <!--Go to homepage or logout-->
   <br>
-  <button style="padding: 7px;"><a href='/'> Go to Homepage</a> </button>
   {% if logged_in %}
   <button style="padding: 7px;"><a href='/logout'>Logout</a> </button>
   {% endif %}

@@ -10,4 +10,6 @@ Authlib
 oauthlib
 pyOpenSSL
 pybase64
+config
 mysql
+mysql-connector-python
