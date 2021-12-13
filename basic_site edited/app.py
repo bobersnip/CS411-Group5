@@ -20,6 +20,9 @@ import requests
 import json
 import config
 import time
+import pymysql
+pymysql.install_as_MySQLdb()
+
 
 # for image uploading
 import os
