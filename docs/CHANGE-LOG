@@ -19,6 +19,10 @@ OAuth inital configurations for Google were implemented
 12/11/2021
 -Completed implementation of Google login
 -added OAuth redirecting functionality to the Google authorization page
+-started implementing SQLAlchemy
+-added Users and Friends class and started adding profile function
+-login functions were fixed
+
 
 
 
