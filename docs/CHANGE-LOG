@@ -8,3 +8,10 @@ app.py was created
 -created a login page with registering and login functions
 -register function adds new users to the database
 -created API function call that receives recipes with given ingredient parameters
+-created home and error html pages
+
+12/8/2021
+OAuth was implementation using Authlib was implemented
+
+
+
