@@ -159,7 +159,7 @@ def new_page_function():
 def email_is_registered(email):
     data = db.session.query(Users.email).filter(
         Users.email == email).first()
-    print("Email is registered data: " + str(data[0]))
+    print("Email is registered data: " + str(data))
     if data == None:
         return False
     else:
