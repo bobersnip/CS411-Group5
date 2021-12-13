@@ -476,9 +476,11 @@ def add_to_favorites(recipe_name):
 @ flask_login.login_required
 def remove_ingredient(ingredient):
     curr_user = flask_login.current_user.get_id()
+    print(curr_user)
     try:
         ingred = Ingredients.query.filter(
-            ingredient == ingredient, curr_user == curr_user).first()
+            ingredient == ingredient).first()
+        print(ingred)
         db.session.delete(ingred)
         db.session.commit()
         return render_template('api_req.html', message="Ingredient deleted", ingredient_list=get_ingredient_list(curr_user))
