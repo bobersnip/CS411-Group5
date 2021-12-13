@@ -18,6 +18,39 @@
     <title>Create an account!</title>
 </head>
 
+<!--code for hovertext from https://www.w3schools.com/css/tryit.asp?filename=trycss_tooltip_right-->
+<style>
+  .tooltip {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted black;
+  }
+  
+  .tooltip .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 1;
+    top: -5px;
+    left: 105%;
+  }
+  
+  .tooltip:hover .tooltiptext {
+    visibility: visible;
+  }
+  </style>
+  <body style="text-align:center;">
+
+{% if message %}
+  <h4>{{message}}!</h4>
+{% endif %}
 {%if supress == "False"%}
 <h1> Email already in use! Use another one or <a href="/login">login</a></h1>
 {% endif %}
@@ -39,9 +72,13 @@
                 <input type="email" name="email" required="required" placeholder="Email"
                         style="position: relative; right: 1px;"><br>
 
-                <label for="password" style="position:relative; left:3px;">Enter password:</label>
-                <input type="password" name="password" required="required" placeholder="Password"
-                        style="position: relative; left: 3px;"><br>
+                <label for="password" style="position:relative; left:3px;">Enter password:
+                <input type="password" pattern = "[0-9a-zA-Z]{8,20}" name="password" required="required" placeholder="Password" 
+                        style="position: relative; left: 1px;">   <div class="tooltip">  * <span class="tooltiptext">Password must be 8-20 characters long and contain at least one lowercase letter, uppercase letter, and number.</span> </div></label>
+                <br>
+                <label for="re_password" style="position:relative; right:6px;">Retype password: </label>
+                <input type="password" name="re_password" required="required" placeholder="Password"
+                        style="position: relative; right: 8px;"><br>
                 <br>
                 <input type="submit"/>
             </form>
