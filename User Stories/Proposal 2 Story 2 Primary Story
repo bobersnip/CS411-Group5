@@ -2,7 +2,7 @@ As a logged in user, I want to find a dish that I can make with the ingredients 
 efficiently and save money. I want to input the ingredients I have on this app and have the app give me a list of dishes that use as many ingredients as possible. 
 Logged in users should be able to click on the “Search for Recipes” button on the bottom of the screen, 
 where they will be redirected to a page that displays a list of recipes that use the ingredients that the logged in users have saved on their account. 
-The list should automatically be sorted from using as many ingredients as possible to at least 1 ingredient used. The list should display the dish name, 
+The list should automatically be sorted from the lowest total cost to the most. The list should display the dish name, 
 picture, how many ingredients in the dish the user doesn’t have , and rating. (The number of ingredients the user doesn’t have should be marked in red or a 
 text that is distinct to show more importance) The logged in user can then click on a recipe in the list to go to the recipe page, 
 where they can see all the details of the recipe that they clicked on. 

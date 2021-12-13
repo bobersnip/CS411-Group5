@@ -178,6 +178,9 @@ def register():
         email = request.form.get('email')
         # TODO I THINK WE ARE SUPPOSED TO HASH THE PASSWORD BEFORE STORING IT
         password = request.form.get('password')
+	re_password = request.form.get('re_password')
+        if (password != re_password):
+            return render_template('register.html', name=email, message='ERROR: passwords must match')
     except:
         # this prints to shell, end users will not see this (all print statements go to shell)
         print("couldn't find all tokens")
@@ -320,7 +323,7 @@ def get_ingredient_list(email):
 def make_req():
     start = time.time()
     URL = "https://api.edamam.com/api/recipes/v2?type=public&"
-    api_key_append = "&app_id=4c5b6d9d&app_key=09c2de772eaeb7fd5d30b135fb041c8f"
+    api_key_append = config.EDMAM_CLIENT_KEY
     ingredients = request.form.get('ingredients')
     prev_ingredients = []
     # Get the users previous ingredients from the db
@@ -351,9 +354,7 @@ def make_req():
     # kroger api stuff
 
     # Get access token from kroger
-    kroger_client_id = "recipeingredientsprices-b099514b5746a51f59bb2aaab456e0886003954412832050940"
-    kroger_client_secret = "yhSnzXMzYTgRRDy0eW3UjaCKALD4FqDE3s2Y6Deu"
-    id_encode = kroger_client_id + ":" + kroger_client_secret
+    id_encode = config.KROGER_CLIENT_KEY + ":" + config.KROGER_CLIENT_SECRET
     id_encode = id_encode.encode("ascii")
     kroger_client_id64 = base64.b64encode(id_encode)
     k64u = kroger_client_id64.decode("ascii")
