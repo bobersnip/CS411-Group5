@@ -1,0 +1,6 @@
+Why we chose our tech stack (Python, Flask, HTML, MySQL):
+	During the course of deciding which languages/programs to use we considered Python with Flask or Node and Java. However, after
+we discussed amongst ourselves we discovered that nearly our entire group was already familiar with Python and Flask, which we decided to go
+with it. Naturally, flask integrates with HTML, which is why we were required to use HTML. Lastly, we had to decide what kind of database we 
+were going to use. We considered MySQL, PostGresSQL, and MongoDB. Ultimately, we decided on MySQL because three of our five group members were
+already proficient in MySQL based on their knowledge from CS460.

@@ -178,7 +178,7 @@ def register():
         email = request.form.get('email')
         # TODO I THINK WE ARE SUPPOSED TO HASH THE PASSWORD BEFORE STORING IT
         password = request.form.get('password')
-	re_password = request.form.get('re_password')
+        re_password = request.form.get('re_password')
         if (password != re_password):
             return render_template('register.html', name=email, message='ERROR: passwords must match')
     except:
@@ -214,8 +214,8 @@ def login():
     email = flask.request.form['email']
 
     # check if email is registered
-    data = db.session.query(
-        sqlalchemy.text("password FROM Users WHERE email = '{0}'".format(email))).first()
+    data = db.session.query(Users.password).filter(
+        Users.email == email).first()
     print(data)
     if data != None:
         pwd = str(data[0])
@@ -501,7 +501,7 @@ def hello():
     if curr_user.is_authenticated == True:
         return render_template('hello.html', message='Welcome to the Economic Recipe Finder!', logged_in=True)
     else:
-        return render_template('hello.html', logged_in=False)
+        return render_template('hello.html', message='Welcome to the Economic Recipe Finder!', logged_in=False)
 
 
 if __name__ == "__main__":

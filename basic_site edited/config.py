@@ -5,6 +5,6 @@ KROGER_CLIENT_KEY = "recipeingredientsprices-b099514b5746a51f59bb2aaab456e088600
 KROGER_CLIENT_SECRET = "yhSnzXMzYTgRRDy0eW3UjaCKALD4FqDE3s2Y6Deu"
 
 # These will need to be changed according to your creditionals
-username = "username"
-password = "password"
+username = "cs411"
+password = "bestclassever"
 server = "127.0.0.1"
