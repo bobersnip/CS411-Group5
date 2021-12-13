@@ -178,6 +178,9 @@ def register():
         email = request.form.get('email')
         # TODO I THINK WE ARE SUPPOSED TO HASH THE PASSWORD BEFORE STORING IT
         password = request.form.get('password')
+	re_password = request.form.get('re_password')
+        if (password != re_password):
+            return render_template('register.html', name=email, message='ERROR: passwords must match')
     except:
         # this prints to shell, end users will not see this (all print statements go to shell)
         print("couldn't find all tokens")
