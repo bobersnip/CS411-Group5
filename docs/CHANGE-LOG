@@ -4,10 +4,9 @@ README.txt was created
 
 app.py was created
 -created flask web application with rudimentary API functionality
--connected the app to MySQL
--created a login page with registering and login functions
--register function adds new users to the database
--created API function call that receives recipes with given ingredient parameters
+-added MySQL
+-created a login page with login functions
+-created API function call to Edamam that receives recipes with given ingredient parameters
 -created home and error html pages
 
 12/8/2021
@@ -22,13 +21,40 @@ OAuth inital configurations for Google were implemented
 -started implementing SQLAlchemy
 -added Users and Friends class and started adding profile function
 -login functions were fixed
+-created registration function
+-corrected login function
+-made the app recognize when a user is logged in
+-added logout functionality
+-added config file
+-created Favorites class
+-added function to add recipes to favorites list in SQL
 
+12/12/2021
+updated multiple html pages to be functionally used
+-api_req
+-req-display
+-register
+-profile
+-login
+-hello(home page)
+-favorites
 
+connected MySQL to app.py
+created favorites page in the backend
+-created favorite function
 
+added Kroger API to app.py
+-Takes the first 10 recipes from the searchlist from edamam and receives the ingredients list
+-Kroger then get the cost of each ingredient, which is displayed and also shows the total cost of the recipe
+-added functionality to remove duplicate ingredients for Kroger calls
 
+updated README.txt to correct MySQL and app.py set up
+integrated OAuth into Flask
+removed redundant redirects and connected pages that weren't connected
 
-
-
+12/13/2021
+updated requirements .txt to add pybase
+added edgecase exception for when trying to register with an email that is already in the database
 
 
 
