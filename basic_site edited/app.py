@@ -8,10 +8,13 @@
 # see links for further understanding
 ###################################################
 
+import base64
+import os
 from authlib.integrations.flask_client import OAuth
 import flask
 from flask import Flask, Response, request, render_template, redirect, url_for
 from sqlalchemy import desc, func, ForeignKey
+import sqlalchemy
 from sqlalchemy.sql.functions import user
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy_utils import create_database, database_exists
@@ -20,10 +23,11 @@ import requests
 import json
 import config
 import time
+import pymysql
+pymysql.install_as_MySQLdb()
+
 
 # for image uploading
-import os
-import base64
 
 
 app = Flask(__name__)
@@ -74,13 +78,6 @@ class Users(db.Model):
     password = db.Column(db.String(100))
     first_name = db.Column(db.String(30))
     last_name = db.Column(db.String(30))
-
-
-class Friends(db.Model):
-    user_id1 = db.Column(db.Integer, ForeignKey(
-        'users.id'), onupdate="CASCADE", primary_key=True)
-    user_id2 = db.Column(db.Integer, ForeignKey(
-        'users.id'), onupdate="CASCADE", primary_key=True)
 
 
 class Favorites(db.Model):
@@ -215,7 +212,7 @@ def login():
 
     # check if email is registered
     data = db.session.query(
-        "password FROM Users WHERE email = '{0}'".format(email)).first()
+        sqlalchemy.text("password FROM Users WHERE email = '{0}'".format(email))).first()
     print(data)
     if data != None:
         pwd = str(data[0])
