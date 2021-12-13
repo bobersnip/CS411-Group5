@@ -12,6 +12,7 @@ from authlib.integrations.flask_client import OAuth
 import flask
 from flask import Flask, Response, request, render_template, redirect, url_for
 from sqlalchemy import desc, func, ForeignKey
+import sqlalchemy
 from sqlalchemy.sql.functions import user
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy_utils import create_database, database_exists
@@ -145,7 +146,7 @@ def new_page_function():
 
 def email_is_registered(email):
     data = db.session.query(
-        "email FROM Users WHERE email = '{0}'".format(email)).first()
+        sqlalchemy.text("email FROM Users WHERE email = '{0}'".format(email))).first()
     if data == None:
         return False
     else:
@@ -194,7 +195,7 @@ def login():
 
     # check if email is registered
     data = db.session.query(
-        "password FROM Users WHERE email = '{0}'".format(email)).first()
+        sqlalchemy.text("password FROM Users WHERE email = '{0}'".format(email))).first()
     print(data)
     if data != None:
         pwd = str(data[0])
