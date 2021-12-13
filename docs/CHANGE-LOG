@@ -16,6 +16,15 @@ OAuth was implementation using Authlib was implemented
 12/10/2021
 OAuth inital configurations for Google were implemented
 
+12/11/2021
+-Completed implementation of Google login
+-added OAuth redirecting functionality to the Google authorization page
+
+
+
+
+
+
 
 
 
