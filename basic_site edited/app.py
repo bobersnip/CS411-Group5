@@ -90,6 +90,12 @@ class Favorites(db.Model):
     ingredients = db.Column(db.Text(10000))
 
 
+class Ingredients(db.Model):
+    user = db.Column(db.String(100), ForeignKey(
+        'users.email'), onupdate="CASCADE", primary_key=True)
+    ingredient = db.Column(db.String(100), primary_key=True)
+
+
 db.create_all()
 
 # begin code used for login
@@ -133,11 +139,16 @@ def request_loader(request):
         Users.email == user.id).first()
     print(data)
     if data != None:
-        pwd = str(data[0][0])
-        user.is_authenticated = request.form['password'] == pwd
+        pwd = str(data[0])
+        print(pwd)
+        req_pwd = request.form['password']
+        print(req_pwd)
+        if req_pwd == pwd:
+            print("They're equal")
+        user.is_authenticated = (req_pwd == pwd)
         return user
     else:
-        return
+        return None
 
 
 '''
@@ -149,8 +160,9 @@ def new_page_function():
 
 
 def email_is_registered(email):
-    data = db.session.query(
-        "email FROM Users WHERE email = '{0}'".format(email)).first()
+    data = db.session.query(Users.email).filter(
+        Users.email == email).first()
+    print("Email is registered data: " + str(data[0]))
     if data == None:
         return False
     else:
@@ -184,8 +196,12 @@ def register():
         # for flask login
         user = User()
         user.id = email
+        print("TRYING TO REGISTER USER")
         flask_login.login_user(user)
         return render_template('hello.html', name=email, message='Account Created!', logged_in=True)
+    else:
+        print("EMAIL IN USE!")
+        return redirect('/login', message="Email is already in use!")
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -286,7 +302,21 @@ def unauthorized_handler():
 
 @ app.route("/api_req", methods=['GET'])
 def api_req():
+    ingredient_list = []
+    try:
+        curr_user = flask_login.current_user.get_id()
+        ingredient_list = db.session.query(
+            Ingredients.ingredient).filter(Ingredients.user == curr_user)
+        return render_template('api_req.html', ingredient_list=ingredient_list)
+    except:
+        print("user not logged in")
     return render_template('api_req.html')
+
+
+def get_ingredient_list(email):
+    ingreds = db.session.query(Ingredients.ingredient).filter(
+        Ingredients.user == email).all()
+    return ingreds
 
 
 @ app.route("/api_req", methods=['POST'])
@@ -295,9 +325,24 @@ def make_req():
     URL = "https://api.edamam.com/api/recipes/v2?type=public&"
     api_key_append = "&app_id=4c5b6d9d&app_key=09c2de772eaeb7fd5d30b135fb041c8f"
     ingredients = request.form.get('ingredients')
-    ingredients.split(", ")
+    prev_ingredients = []
+    # Get the users previous ingredients from the db
+    if flask_login.current_user.is_authenticated:
+        ingredient_list = ingredients.replace(" ", "").split(",")
+        curr_user = flask_login.current_user.get_id()
+        try:
+            for ingred in ingredient_list:
+                new_ingredient = Ingredients(user=curr_user, ingredient=ingred)
+                db.session.add(new_ingredient)
+                db.session.commit()
+        except:
+            return render_template('api_req.html', message="Some or all ingredients already in your ingredient list!")
+        prev_ingredients = get_ingredient_list(curr_user)
+    for ingredient in prev_ingredients:
+        ingredients += ", " + str(ingredient)
     ingredients = "q=" + ingredients
     query_url = URL + ingredients + api_key_append
+
     # print(query_url)
     response = requests.get(query_url)
     # print(response.text["hits"])
@@ -428,6 +473,20 @@ def add_to_favorites(recipe_name):
         return render_template('api_req.html', message=recipe_name + " added to favorites")
     except:
         return render_template('api_req.html', message="recipe already in favorites, or another error occurred.")
+
+
+@ app.route("/remove/<ingredient>/", methods=['GET', 'POST'])
+@ flask_login.login_required
+def remove_ingredient(ingredient):
+    curr_user = flask_login.current_user.get_id()
+    try:
+        ingred = Ingredients.query.filter(
+            ingredient == ingredient, curr_user == curr_user).first()
+        db.session.delete(ingred)
+        db.session.commit()
+        return render_template('api_req.html', message="Ingredient deleted", ingredient_list=get_ingredient_list(curr_user))
+    except:
+        return render_template('api_req.html', message="Failed to delete")
 
 
 @ app.route("/req_display", methods=['GET'])

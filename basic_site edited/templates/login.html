@@ -20,7 +20,9 @@
  </style>
  </head>
 
-
+{% if message %}
+  <h4>{{message}}</h4>
+{% endif %}
 <body>
     <div class="login">
     <form action='login' method='POST'>

@@ -26,6 +26,12 @@
         <div class="title">
             <h1>Search for ingredients below:</h1>
         </div>
+        <h5>Here are the ingredients already in your ingredient list:</h1>
+        {% if ingredient_list %}
+          {% for ingredient in ingredient_list %}
+            <ul>{{ingredient}} <button style="padding: 7px;"><a href="/remove/{{ingredient}}" class="btn btn-success btn-sm">Remove</a> </button></ul>
+          {% endfor %}
+        {% endif %}
         <div id="content">
             <form method="post" action="{{ url_for('make_req') }}">
                 <label for="ingredients">Enter ingredients to filter by (separated by commas):</label>
