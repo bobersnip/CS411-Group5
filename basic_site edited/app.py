@@ -78,14 +78,6 @@ class Users(db.Model):
     first_name = db.Column(db.String(30))
     last_name = db.Column(db.String(30))
 
-
-class Friends(db.Model):
-    user_id1 = db.Column(db.Integer, ForeignKey(
-        'users.id'), onupdate="CASCADE", primary_key=True)
-    user_id2 = db.Column(db.Integer, ForeignKey(
-        'users.id'), onupdate="CASCADE", primary_key=True)
-
-
 class Favorites(db.Model):
     user = db.Column(db.String(100), ForeignKey(
         'users.email'), onupdate="CASCADE", primary_key=True)
