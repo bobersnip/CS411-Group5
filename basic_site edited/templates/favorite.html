@@ -29,7 +29,6 @@
         <tr>
             <th>Recipe Name</th>
             <th>Recipe Ingredients</th>
-            <th>Delete</th>
         </tr>
         
         <tr>
@@ -38,13 +37,11 @@
                 <tr>
                     <td>{{recipes[0]}}</td>
                     <td style="width: 700px;">{{recipes[1]}}</td>
-                    <td><input type="button" value="Delete from Favorites" onclick="deleteRow(this)"></td>
                 </tr>  
                 {% endfor %}
             {% endif %}
         </tr>
     
     </table>
-    <!--insert deleteRow function?-->
     <button style="padding: 7px;"><a href='/'> Go to Homepage</a> </button>
 </html>
